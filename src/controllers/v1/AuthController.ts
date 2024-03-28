@@ -11,7 +11,6 @@ import {
 } from "@/util/error"; // Adjust the path as necessary
 import { generateAccessToken, generateRefreshToken } from "@/util/helpers";
 import { HttpStatusCode } from "@/types/HttpStatusCode";
-import logger from "@/config/winston";
 
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 
@@ -90,17 +89,7 @@ class AuthController {
    */
   static async login(req: Request, res: Response, next: NextFunction) {
     try {
-      const { email, password } = req.body;
-      const user = await User.findOne({ where: { email } });
-      if (!user) {
-        throw new HTTP404Error("Authentication failed. User not found.");
-      }
-
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (!isPasswordValid) {
-        throw new HTTP401Error("Authentication failed. Wrong password.");
-      }
-
+      const user = req.user as User;
       const access_token = await generateAccessToken(user);
       const refresh_token = await generateRefreshToken(user);
 

@@ -1,20 +1,31 @@
 import express, { Express } from "express";
-import dotenv from "dotenv";
 import bodyParser from "body-parser";
+
+// CUSTOM
+import { createRoutes } from "./routes/routes";
+import ErrorHandler from "./middleware/ErrorHandler";
+import { corsOptions } from "./config/cors";
+
+// SWAGGER
 import swaggerUi from "swagger-ui-express";
 import { config } from "./config/swagger";
 
-import { createRoutes } from "./routes/routes";
+// DOTENV
+import dotenv from "dotenv";
 
-import ErrorHandler from "./middleware/ErrorHandler";
-
-// Sequelize
+// SEQUELIZE
 import { sequelize } from "./util/database";
 import { createAssociations } from "./util/associations";
 
 // CORS
 import cors from "cors";
+
+// WINSTON
 import logger from "./config/winston";
+
+// PASSPORT
+import "@/config/passport";
+import passport from "passport";
 
 dotenv.config();
 
@@ -28,17 +39,17 @@ app.use(
 );
 app.use(bodyParser.json());
 
-// Swagger
+// SWAGGER
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(config));
 
-var corsOptions = {
-  origin: "*",
-  optionsSuccessStatus: 200,
-};
+// CORS
 app.use(cors(corsOptions));
 
 // STATIC
 app.use("/static", express.static("./public"));
+
+// PASSPORT
+app.use(passport.initialize());
 
 // ROUTES
 createRoutes(app);
@@ -46,9 +57,8 @@ createRoutes(app);
 // ERROR HANDLER
 app.use(ErrorHandler);
 
-// SEQUELIZE ASSOCIATIONS
+// SEQUELIZE
 createAssociations();
-
 sequelize
   .sync({ force: false })
   .then(() => {
