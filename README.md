@@ -16,11 +16,6 @@ These instructions will get your copy of the project up and running on your loca
 
 - Node.js
 - npm
-- A global installation of Nodemon
-
-```bash
-npm install -g nodemon
-```
 
 ## Setup Instruction
 
