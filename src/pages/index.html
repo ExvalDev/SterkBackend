@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TrainTrack Backend</title>
+    <style>
+      body,
+      html {
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        overflow: hidden;
+      }
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        text-align: center;
+        padding: 20px;
+        background-color: #f0f0f0; /* Light grey background */
+      }
+      .col {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+      }
+      .headline {
+        font-size: 5em;
+        margin-bottom: 20px;
+        font-weight: 700;
+      }
+      .button {
+        font-size: 1.2em;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: black; /* Bootstrap primary color */
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        text-decoration: none;
+      }
+      .button:hover {
+        background-color: gray; /* Darker blue on hover */
+      }
+      @media (max-width: 600px) {
+        .headline {
+          font-size: 1.5em;
+        }
+        .button {
+          font-size: 1em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="col">
+        <img src="/images/logo.png" alt="Logo" width="200" />
+        <div class="headline">Backend</div>
+        <a href="/api-docs" class="button">Swagger Documentation</a>
+      </div>
+    </div>
+  </body>
+</html>
