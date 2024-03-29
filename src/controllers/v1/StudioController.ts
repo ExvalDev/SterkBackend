@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Studio from "@/models/Studio"; // Adjust the path as necessary
-import { HTTP404Error } from "@/util/error"; // Adjust the path as necessary
+import { HTTP400Error, HTTP404Error } from "@/util/error"; // Adjust the path as necessary
 import logger from "@/config/winston";
 
 class StudioController {
@@ -33,9 +33,14 @@ class StudioController {
   static async createStudio(req: Request, res: Response, next: NextFunction) {
     try {
       const { name } = req.body;
-      const newStudio = await Studio.create({ name });
-      logger.info(`Studio created: ${newStudio.name}`);
-      return res.status(201).json(newStudio);
+      return await Studio.create({ name })
+        .then((studio) => {
+          logger.info(`Studio created: ${studio.name}`);
+          return res.status(201).json(studio);
+        })
+        .catch((error) => {
+          throw new HTTP400Error("Bad Request", error);
+        });
     } catch (error) {
       next(error);
     }
@@ -144,9 +149,15 @@ class StudioController {
         throw new HTTP404Error("Studio not found");
       }
 
-      studio = await studio.update({ name });
-      logger.info(`Updated studio: ${studio.name}`);
-      return res.json(studio);
+      return await studio
+        .update({ name })
+        .then((studio) => {
+          logger.info(`Updated studio: ${studio.name}`);
+          return res.json(studio);
+        })
+        .catch((error) => {
+          throw new HTTP400Error("Bad Request", error);
+        });
     } catch (error) {
       next(error);
     }

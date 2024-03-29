@@ -1,9 +1,9 @@
-import { Request, Response, NextFunction } from "express";
+import e, { Request, Response, NextFunction } from "express";
 import User from "@/models/User"; // Adjust the path as necessary
 import { HTTP404Error, HTTP400Error, HTTP409Error } from "@/util/error"; // Adjust the path as necessary
 import bcrypt from "bcrypt";
 import logger from "@/config/winston";
-import { HttpStatusCode } from "@/types/HttpStatusCode";
+import { ValidationError } from "sequelize";
 
 class UserController {
   /**
@@ -60,19 +60,21 @@ class UserController {
       }
 
       const hashedPassword = await bcrypt.hash(password, 12);
-      const user = await User.create({
+      return await User.create({
         name,
         email,
         password: hashedPassword,
         language,
         roleId,
-      });
-
-      // Do not return password and other sensitive info
-      const { password: _, ...userWithoutPassword } = user.toJSON();
-
-      logger.info(`User created: ${userWithoutPassword.email}`);
-      return res.status(201).json(userWithoutPassword);
+      })
+        .then((user) => {
+          logger.info(`User created: ${user.email}`);
+          const { password: _, ...userWithoutPassword } = user.toJSON();
+          return res.status(201).json(userWithoutPassword);
+        })
+        .catch((error) => {
+          throw new HTTP400Error("BAD REQUEST", error);
+        });
     } catch (error) {
       next(error);
     }
@@ -201,10 +203,16 @@ class UserController {
         throw new HTTP404Error("User not found");
       }
 
-      user = await user.update({ name, email, language, roleId });
-      logger.info(`Updated user: ${user.email}`);
-      const { password: _, ...userWithoutPassword } = user.toJSON();
-      return res.json(userWithoutPassword);
+      return await user
+        .update({ name, email, language, roleId })
+        .then((user) => {
+          logger.info(`Updated user: ${user.email}`);
+          const { password: _, ...userWithoutPassword } = user.toJSON();
+          return res.status(201).json(userWithoutPassword);
+        })
+        .catch((error) => {
+          throw new HTTP400Error("BAD REQUEST", error);
+        });
     } catch (error) {
       next(error);
     }

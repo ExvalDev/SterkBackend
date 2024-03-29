@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import TrainingData from "@/models/TrainingData"; // Adjust the path as necessary
-import { HTTP404Error } from "@/util/error"; // Adjust the path as necessary
+import { HTTP400Error, HTTP404Error } from "@/util/error"; // Adjust the path as necessary
 import logger from "@/config/winston";
 
 class TrainingDataController {
@@ -46,14 +46,19 @@ class TrainingDataController {
   ) {
     try {
       const { value, unitId, machineCategoryId, sessionId } = req.body;
-      const newTrainingData = await TrainingData.create({
+      return await TrainingData.create({
         value,
         unitId,
         machineCategoryId,
         sessionId,
-      });
-      logger.info(`Training data created: ${newTrainingData.id}`);
-      return res.status(201).json(newTrainingData);
+      })
+        .then((trainingData) => {
+          logger.info(`Training data created: ${trainingData.id}`);
+          return res.status(201).json(trainingData);
+        })
+        .catch((error) => {
+          throw new HTTP400Error("Bad Request", error);
+        });
     } catch (error) {
       next(error);
     }
@@ -192,10 +197,15 @@ class TrainingDataController {
         machineCategoryId ?? trainingData.machineCategoryId;
       trainingData.sessionId = sessionId ?? trainingData.sessionId;
 
-      await trainingData.save();
-
-      logger.info(`Training data updated: ${trainingData.id}`);
-      return res.json(trainingData);
+      return await trainingData
+        .save()
+        .then((trainingData) => {
+          logger.info(`Training data updated: ${trainingData.id}`);
+          return res.json(trainingData);
+        })
+        .catch((error) => {
+          throw new HTTP400Error("Bad Request", error);
+        });
     } catch (error) {
       next(error);
     }

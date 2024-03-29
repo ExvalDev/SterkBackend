@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Session from "@/models/Session"; // Adjust the path as necessary
-import { HTTP404Error } from "@/util/error"; // Adjust the path as necessary
+import { HTTP400Error, HTTP404Error } from "@/util/error"; // Adjust the path as necessary
 import logger from "@/config/winston";
 
 class SessionController {
@@ -35,9 +35,14 @@ class SessionController {
   static async createSession(req: Request, res: Response, next: NextFunction) {
     try {
       const { sessionStart, sessionEnd } = req.body;
-      const newSession = await Session.create({ sessionStart, sessionEnd });
-      logger.info(`Session created: ${newSession.id}`);
-      return res.status(201).json(newSession);
+      return await Session.create({ sessionStart, sessionEnd })
+        .then((session) => {
+          logger.info(`Session created: ${session.id}`);
+          return res.status(201).json(session);
+        })
+        .catch((error) => {
+          throw new HTTP400Error("Bad Request", error);
+        });
     } catch (error) {
       next(error);
     }
@@ -147,9 +152,15 @@ class SessionController {
       if (!session) {
         throw new HTTP404Error("Session not found");
       }
-      session = await session.update({ sessionStart, sessionEnd });
-      logger.info(`Session updated: ${session.id}`);
-      return res.json(session);
+      return await session
+        .update({ sessionStart, sessionEnd })
+        .then((session) => {
+          logger.info(`Session updated: ${session.id}`);
+          return res.json(session);
+        })
+        .catch((error) => {
+          throw new HTTP400Error("Bad Request", error);
+        });
     } catch (error) {
       next(error);
     }
