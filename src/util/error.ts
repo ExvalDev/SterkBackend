@@ -1,12 +1,20 @@
+import { ForeignKeyConstraintError, ValidationError } from "sequelize";
 import { HttpStatusCode } from "../types/HttpStatusCode";
 
 class BaseError extends Error {
   public readonly name: string;
   public readonly httpCode: HttpStatusCode;
-  public readonly description: string;
+  public readonly description: string | string[];
 
-  constructor(name: string, httpCode: HttpStatusCode, description: string) {
-    super(description);
+  constructor(
+    name: string,
+    httpCode: HttpStatusCode,
+    description: string | string[]
+  ) {
+    const message = Array.isArray(description)
+      ? description.join(" ")
+      : description;
+    super(message);
     Object.setPrototypeOf(this, new.target.prototype);
 
     this.name = name;
@@ -19,46 +27,32 @@ class BaseError extends Error {
   }
 }
 
-export class APIError extends BaseError {
-  constructor(
-    name: string,
-    httpCode: HttpStatusCode = HttpStatusCode.INTERNAL_SERVER,
-    description = "internal server error"
-  ) {
-    super(name, httpCode, description);
-  }
-}
-
 export class HTTP400Error extends BaseError {
-  constructor(
-    generalMessage: string = "Bad Request",
-    validationErrors?: { type: string; path: string; message?: string }[]
-  ) {
-    let description = generalMessage; // Default message for bad requests
-
-    // If validation errors are provided, format them
-    if (validationErrors && validationErrors.length > 0) {
-      description = validationErrors
-        .map((error) => {
-          switch (error.type) {
-            case "notNull":
-              return `Required field ${error.path} is missing.`;
-            case "string.base":
-              return `Field ${error.path} must be a string.`;
-            case "number.base":
-              return `Field ${error.path} must be a number.`;
-            // Add more cases as needed for different types of validation errors
+  constructor(message: string = "Bad Request", error?: Error) {
+    let errors = [];
+    if (error instanceof ValidationError) {
+      const validationErrors = error.errors;
+      if (validationErrors && validationErrors.length > 0) {
+        validationErrors.forEach((error) => {
+          switch (error.validatorKey) {
+            case "is_null":
+              errors.push(`Required field ${error.path} is missing`);
+              break;
             default:
-              // If there's a custom message provided, use it; otherwise, use a generic message
-              return (
-                error.message || `Validation error on field ${error.path}.`
+              errors.push(
+                error.message || `Validation error on field ${error.path}`
               );
           }
-        })
-        .join(" "); // Join with a space or consider "; " for separation
+        });
+      }
     }
 
-    super("BAD REQUEST", HttpStatusCode.BAD_REQUEST, description.trim());
+    if (error instanceof ForeignKeyConstraintError) {
+      const foreignKeyError = error as ForeignKeyConstraintError;
+      message = `This ${foreignKeyError.fields[0]} does not exist!`;
+    }
+    const description = errors.length > 0 ? errors : message;
+    super("BAD REQUEST", HttpStatusCode.BAD_REQUEST, description);
   }
 }
 

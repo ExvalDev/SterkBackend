@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import NFCTag from "@/models/NFCTag"; // Adjust the path as necessary
-import { HTTP404Error } from "@/util/error"; // Adjust the path as necessary
+import { HTTP400Error, HTTP404Error } from "@/util/error"; // Adjust the path as necessary
 import logger from "@/config/winston";
 
 class NFCTagController {
@@ -36,9 +36,14 @@ class NFCTagController {
   static async createNFCTag(req: Request, res: Response, next: NextFunction) {
     try {
       const { nfcId, studioId } = req.body;
-      const newNFCTag = await NFCTag.create({ nfcId, studioId });
-      logger.info(`NFC tag created: ${newNFCTag.nfcId}`);
-      return res.status(201).json(newNFCTag);
+      return await NFCTag.create({ nfcId, studioId })
+        .then((nfcTag) => {
+          logger.info(`NFC tag created: ${nfcTag.nfcId}`);
+          return res.status(201).json(nfcTag);
+        })
+        .catch((error) => {
+          throw new HTTP400Error("Bad Request", error);
+        });
     } catch (error) {
       next(error);
     }
@@ -149,9 +154,15 @@ class NFCTagController {
         throw new HTTP404Error("NFC tag not found");
       }
       nfctag.nfcId = nfcId;
-      await nfctag.save();
-      logger.info(`Updated NFC tag: ${nfctag.nfcId}`);
-      return res.json(nfctag);
+      return nfctag
+        .save()
+        .then((nfcTag) => {
+          logger.info(`Updated NFC tag: ${nfctag.nfcId}`);
+          return res.json(nfctag);
+        })
+        .catch((error) => {
+          throw new HTTP400Error("Bad Request", error);
+        });
     } catch (error) {
       next(error);
     }

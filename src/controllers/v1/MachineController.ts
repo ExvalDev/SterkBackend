@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Machine from "@/models/Machine"; // Adjust the path as necessary
-import { HTTP404Error } from "@/util/error"; // Adjust the path as necessary
+import { HTTP400Error, HTTP404Error } from "@/util/error"; // Adjust the path as necessary
 import logger from "@/config/winston";
 
 class MachineController {
@@ -42,14 +42,19 @@ class MachineController {
   static async createMachine(req: Request, res: Response, next: NextFunction) {
     try {
       const { name, machineCategoryId, nfcTagId, studioId } = req.body;
-      const newMachine = await Machine.create({
+      return await Machine.create({
         name,
         machineCategoryId,
         nfcTagId,
         studioId,
-      });
-      logger.info(`Machine created: ${newMachine.name}`);
-      return res.status(201).json(newMachine);
+      })
+        .then((machine) => {
+          logger.info(`Machine created: ${machine.name}`);
+          return res.status(201).json(machine);
+        })
+        .catch((error) => {
+          throw new HTTP400Error("Bad Request", error);
+        });
     } catch (error) {
       next(error);
     }
@@ -167,14 +172,20 @@ class MachineController {
         throw new HTTP404Error("Machine not found");
       }
 
-      machine = await machine.update({
-        name,
-        machineCategoryId,
-        nfcTagId,
-        studioId,
-      });
-      logger.info(`Machine updated: ${machine.name}`);
-      return res.json(machine);
+      return await machine
+        .update({
+          name,
+          machineCategoryId,
+          nfcTagId,
+          studioId,
+        })
+        .then((machine) => {
+          logger.info(`Machine updated: ${machine.name}`);
+          return res.json(machine);
+        })
+        .catch((error) => {
+          throw new HTTP400Error("Bad Request", error);
+        });
     } catch (error) {
       next(error);
     }

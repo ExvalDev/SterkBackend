@@ -10,11 +10,20 @@ const ErrorHandler = (
   next: NextFunction
 ) => {
   logger.error(error);
-  return res.status(error.httpCode || 500).json({
+
+  const response = {
     name: error.name,
     httpCode: error.httpCode || 500,
-    description: error.description,
-  });
+  };
+
+  if (Array.isArray(error.description)) {
+    response["errors"] = error.description;
+  } else {
+    response["description"] =
+      error.description || "An unexpected error occurred";
+  }
+
+  return res.status(error.httpCode || 500).json(response);
 };
 
 export default ErrorHandler;

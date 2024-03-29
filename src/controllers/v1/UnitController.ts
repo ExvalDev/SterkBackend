@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import Unit from "@/models/Unit"; // Adjust the path as necessary
-import { HTTP404Error, HTTP409Error } from "@/util/error"; // Adjust the path as necessary
-import { Op } from "sequelize";
+import { HTTP400Error, HTTP404Error, HTTP409Error } from "@/util/error"; // Adjust the path as necessary
+import { Op, ValidationError } from "sequelize";
 import logger from "@/config/winston";
 
 class UnitController {
@@ -36,6 +36,10 @@ class UnitController {
   static async createUnit(req: Request, res: Response, next: NextFunction) {
     try {
       const { name } = req.body;
+      if (!name) {
+        throw new HTTP400Error("The name field is required.");
+      }
+
       // Check if the unit already exists
       const existingUnit = await Unit.findOne({ where: { name } });
       if (existingUnit) {
@@ -44,9 +48,14 @@ class UnitController {
         );
       }
 
-      const unit = await Unit.create({ name });
-      logger.info(`Unit created: ${unit.name}`);
-      return res.status(201).json(unit);
+      return await Unit.create({ name })
+        .then((unit) => {
+          logger.info(`Unit created: ${unit.name}`);
+          return res.status(201).json(unit);
+        })
+        .catch((error) => {
+          throw new HTTP400Error("Bad Request", error);
+        });
     } catch (error) {
       next(error);
     }
@@ -155,6 +164,9 @@ class UnitController {
     try {
       const { id } = req.params;
       const { name } = req.body;
+      if (!name) {
+        throw new HTTP400Error("The name field is required.");
+      }
 
       // Check if another unit with the new name already exists (excluding the current unit)
       const existingUnit = await Unit.findOne({
@@ -175,9 +187,15 @@ class UnitController {
       }
 
       unit.name = name;
-      await unit.save();
-      logger.info(`Unit updated: ${unit.name}`);
-      return res.json(unit);
+      return await unit
+        .save()
+        .then((unit) => {
+          logger.info(`Unit updated: ${unit.name}`);
+          return res.json(unit);
+        })
+        .catch((error) => {
+          throw new HTTP400Error("Bad Request", error);
+        });
     } catch (error) {
       next(error);
     }

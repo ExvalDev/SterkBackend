@@ -195,8 +195,8 @@ class AuthController {
 
         res.json({
           userId: user.id,
-          accessToken: newAccessToken,
-          refreshToken: newRefreshToken,
+          access_token: newAccessToken,
+          refresh_token: newRefreshToken,
         });
       });
     } catch (error) {

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import MachineCategory from "@/models/MachineCategory"; // Adjust the path as necessary
-import { HTTP404Error } from "@/util/error"; // Adjust the path as necessary
+import { HTTP400Error, HTTP404Error } from "@/util/error"; // Adjust the path as necessary
 import logger from "@/config/winston";
 import { log } from "winston";
 
@@ -38,9 +38,14 @@ class MachineCategoryController {
   ) {
     try {
       const { name } = req.body;
-      const newCategory = await MachineCategory.create({ name });
-      logger.info(`Machine category created: ${newCategory.name}`);
-      return res.status(201).json(newCategory);
+      return await MachineCategory.create({ name })
+        .then((category) => {
+          logger.info(`Machine category created: ${category.name}`);
+          return res.status(201).json(category);
+        })
+        .catch((error) => {
+          throw new HTTP400Error("Bad Request", error);
+        });
     } catch (error) {
       next(error);
     }
@@ -161,9 +166,15 @@ class MachineCategoryController {
         throw new HTTP404Error("Machine category not found");
       }
 
-      category = await category.update({ name });
-      logger.info(`Updated machine category: ${category.name}`);
-      return res.json(category);
+      return await category
+        .update({ name })
+        .then((category) => {
+          logger.info(`Updated machine category: ${category.name}`);
+          return res.json(category);
+        })
+        .catch((error) => {
+          throw new HTTP400Error("Bad Request", error);
+        });
     } catch (error) {
       next(error);
     }
