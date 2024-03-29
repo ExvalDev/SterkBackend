@@ -7,39 +7,34 @@ import {
   ForeignKey,
 } from "sequelize";
 import { sequelize } from "../util/database";
-import type { Language } from "../types/Language";
-import Role from "./Role";
+import User from "./User";
 
 /**
  * @swagger
  * components:
  *   schemas:
- *     User:
+ *     Token:
  *       type: object
  *       required:
- *         - name
- *         - email
- *         - password
- *         - roleId
+ *         - access_token
+ *         - refresh_token
+ *         - userId
  *       properties:
  *         id:
  *           type: number
  *           description: The auto-generated id of the user
- *         name:
+ *         access_token:
  *           type: string
- *           description: The name of the user
- *         email:
+ *           description: The access_token of the user
+ *         refresh_token:
  *           type: string
- *           description: The email of the user
- *         password:
- *           type: string
- *           description: The password of the user
- *         language:
- *           type: string
- *           description: The language of the user
- *         roleId:
+ *           description: The refresh_token of the user
+ *         sessionId:
+ *          type: string
+ *          description: The session id of the user
+ *         userId:
  *           type: integer
- *           description: The id of the role of the user
+ *           description: The id of the user
  *         createdAt:
  *           type: string
  *           format: date
@@ -49,48 +44,44 @@ import Role from "./Role";
  *           format: date
  *           description: Last update of the user
  */
-class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
+class Token extends Model<
+  InferAttributes<Token>,
+  InferCreationAttributes<Token>
+> {
   declare id: CreationOptional<number>;
-  declare name: string;
-  declare email: string;
-  declare password: string;
-  declare language: Language;
-  declare roleId: ForeignKey<Role["id"]>;
+  declare access_token: string;
+  declare refresh_token: string;
+  declare sessionId: string;
+  declare userId: ForeignKey<User["id"]>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
 
-User.init(
+Token.init(
   {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    password: {
+    access_token: {
       type: DataTypes.STRING,
     },
-    language: {
+    refresh_token: {
       type: DataTypes.STRING,
-      allowNull: false,
+    },
+    sessionId: {
+      type: DataTypes.STRING,
     },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   },
   {
-    modelName: "User",
-    tableName: "users",
+    modelName: "Token",
+    tableName: "tokens",
     timestamps: true,
     sequelize,
   }
 );
 
-export default User;
+export default Token;

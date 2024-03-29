@@ -10,13 +10,11 @@ const ErrorHandler = (
   next: NextFunction
 ) => {
   logger.error(error);
-  return res
-    .status(error.httpCode)
-    .json({
-      name: error.name,
-      httpCode: error.httpCode,
-      description: error.description,
-    });
+  return res.status(error.httpCode || 500).json({
+    name: error.name,
+    httpCode: error.httpCode || 500,
+    description: error.description,
+  });
 };
 
 export default ErrorHandler;

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { v4 as uuidv4 } from "uuid";
 import User from "@/models/User"; // Adjust the path as necessary
 import {
   HTTP400Error,
@@ -11,8 +12,10 @@ import {
 } from "@/util/error"; // Adjust the path as necessary
 import { generateAccessToken, generateRefreshToken } from "@/util/helpers";
 import { HttpStatusCode } from "@/types/HttpStatusCode";
-import logger from "@/config/winston";
+import Token from "@/models/Token";
+import Role from "@/models/Role";
 
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 
 class AuthController {
@@ -42,6 +45,11 @@ class AuthController {
       const userExists = await User.findOne({ where: { email } });
       if (userExists) {
         throw new HTTP409Error("Email already in use");
+      }
+
+      const role = await Role.findByPk(roleId);
+      if (!role) {
+        throw new HTTP404Error("Role not found");
       }
 
       const hashedPassword = await bcrypt.hash(password, 12);
@@ -101,12 +109,16 @@ class AuthController {
         throw new HTTP401Error("Authentication failed. Wrong password.");
       }
 
-      const access_token = await generateAccessToken(user);
-      const refresh_token = await generateRefreshToken(user);
+      const sessionId = uuidv4();
+      const access_token = await generateAccessToken(user, sessionId);
+      const refresh_token = await generateRefreshToken(user, sessionId);
 
-      user.access_token = await bcrypt.hash(access_token, 12);
-      user.refresh_token = await bcrypt.hash(refresh_token, 12);
-      user.save();
+      Token.create({
+        sessionId: sessionId,
+        access_token: await bcrypt.hash(access_token, 12),
+        refresh_token: await bcrypt.hash(refresh_token, 12),
+        userId: user.id,
+      });
 
       return res.status(HttpStatusCode.OK).json({
         message: "User logged in successfully",
@@ -156,20 +168,30 @@ class AuthController {
       // Verify refresh token
       jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, async (err, decoded) => {
         if (err) {
-          throw new HTTP403Error("Invalid refresh token");
+          return next(new HTTP403Error("Invalid refresh token"));
         }
 
-        // Refresh token is valid; find the user and generate new tokens
         const user = await User.findByPk(decoded.id);
         if (!user) {
-          throw new HTTP404Error("User not found");
+          return next(new HTTP404Error("User not found"));
         }
 
-        const newAccessToken = await generateAccessToken(user);
-        const newRefreshToken = await generateRefreshToken(user);
+        const sessionId = decoded.session;
+        const token = await Token.findOne({
+          where: {
+            sessionId: sessionId,
+            userId: decoded.id,
+          },
+        });
+        if (!token) {
+          return next(new HTTP404Error("No Token found for this user."));
+        }
 
-        user.access_token = await bcrypt.hash(newAccessToken, 12);
-        user.refresh_token = await bcrypt.hash(newRefreshToken, 12);
+        const newAccessToken = await generateAccessToken(user, sessionId);
+        const newRefreshToken = await generateRefreshToken(user, sessionId);
+        token.access_token = await bcrypt.hash(newAccessToken, 12);
+        token.refresh_token = await bcrypt.hash(newRefreshToken, 12);
+        await token.save();
 
         res.json({
           userId: user.id,
@@ -177,6 +199,70 @@ class AuthController {
           refreshToken: newRefreshToken,
         });
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+  /**
+   * @swagger
+   * /api/v1/auth/logout:
+   *   get:
+   *     summary: Log out a user
+   *     tags: [Auth]
+   *     description: This endpoint is used to log out a user by invalidating the current access token. The access token should be provided in the Authorization header.
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: Successfully logged out. The session associated with the access token has been invalidated.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   example: Successfully logged out
+   *       401:
+   *         description: Unauthorized. Possible reasons include no access token provided, or the provided access token is invalid or expired.
+   *       404:
+   *         description: Session not found. Indicates that the session associated with the provided token could not be found.
+   *       500:
+   *         description: Server error. Something went wrong on the server.
+   */
+  static async logout(req: Request, res: Response, next: NextFunction) {
+    try {
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        throw new HTTP401Error("Unauthorized: No access token provided");
+      }
+      const accessToken = authHeader.split(" ")[1];
+
+      // Verify the access token to extract the sessionId or userId
+      jwt.verify(accessToken, ACCESS_TOKEN_SECRET, async (err, decoded) => {
+        if (err) {
+          throw new HTTP401Error("Unauthorized: Invalid token!");
+        }
+
+        try {
+          const token = await Token.findOne({
+            where: {
+              userId: decoded.id,
+              sessionId: decoded.session,
+            },
+          });
+          if (!token) {
+            throw new HTTP404Error("Session not found");
+          }
+
+          await token.destroy();
+        } catch (error) {
+          next(error);
+        }
+      });
+      return res
+        .status(HttpStatusCode.OK)
+        .json({ message: "Successfully logged out" });
     } catch (error) {
       next(error);
     }

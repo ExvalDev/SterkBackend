@@ -4,8 +4,9 @@ import bodyParser from "body-parser";
 import { createRoutes } from "./routes/routes";
 
 // Sequelize
-import { sequelize } from "./util/database";
-import { createAssociations } from "./util/associations";
+import { sequelize } from "@/util/database";
+import { createAssociations } from "@/util/associations";
+import seedData from "@/util/seed";
 
 // CORS
 import cors from "cors";
@@ -33,7 +34,8 @@ createAssociations();
 
 sequelize
   .sync({ force: false })
-  .then(() => {
+  .then(async () => {
+    await seedData();
     app.listen(port);
     logger.warn(`Server running on port ${port}`);
   })

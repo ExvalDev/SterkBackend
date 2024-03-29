@@ -44,7 +44,7 @@ cp .env.example .env
 
 You will need to set up your database connection and JWT secrets as described below.
 
-### 4. Generate JWT Secrets
+### 4. Generate DB Passwords & JWT Secrets
 
 Generate secrets for the `MYSQL_ROOT_PASSWORD` and `DB_PASSWORD`:
 

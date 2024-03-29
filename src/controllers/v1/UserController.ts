@@ -3,6 +3,7 @@ import User from "@/models/User"; // Adjust the path as necessary
 import { HTTP404Error, HTTP400Error, HTTP409Error } from "@/util/error"; // Adjust the path as necessary
 import bcrypt from "bcrypt";
 import logger from "@/config/winston";
+import { HttpStatusCode } from "@/types/HttpStatusCode";
 
 class UserController {
   /**
@@ -95,7 +96,9 @@ class UserController {
    */
   static async getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
-      const users = await User.findAll();
+      const users = await User.findAll({
+        attributes: { exclude: ["password"] }, // Exclude password from results
+      });
       logger.info(`Retrieved ${users.length} users`);
       return res.json(users);
     } catch (error) {
@@ -134,7 +137,8 @@ class UserController {
         throw new HTTP404Error("User not found");
       }
       logger.info(`Retrieved user: ${user.email}`);
-      return res.json(user);
+      const { password: _, ...userWithoutPassword } = user.toJSON();
+      return res.json(userWithoutPassword);
     } catch (error) {
       next(error);
     }
@@ -199,7 +203,8 @@ class UserController {
 
       user = await user.update({ name, email, language, roleId });
       logger.info(`Updated user: ${user.email}`);
-      return res.json(user);
+      const { password: _, ...userWithoutPassword } = user.toJSON();
+      return res.json(userWithoutPassword);
     } catch (error) {
       next(error);
     }
@@ -234,7 +239,7 @@ class UserController {
 
       await user.destroy();
       logger.info(`User deleted: ${id}`);
-      return res.status(204).send(); // No content to send back, indicating successful deletion
+      return res.status(204).send();
     } catch (error) {
       next(error);
     }
