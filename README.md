@@ -16,11 +16,6 @@ These instructions will get your copy of the project up and running on your loca
 
 - Node.js
 - npm
-- A global installation of Nodemon
-
-```bash
-npm install -g nodemon
-```
 
 ## Setup Instruction
 
@@ -51,6 +46,16 @@ You will need to set up your database connection and JWT secrets as described be
 
 ### 4. Generate JWT Secrets
 
+Generate secrets for the `MYSQL_ROOT_PASSWORD` and `DB_PASSWORD`:
+
+```
+node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
+```
+
+Add these passwords to your `.env` file.
+
+---
+
 Generate secrets for the `ACCESS_TOKEN_SECRET` and `REFRESH_TOKEN_SECRET`:
 
 ```
@@ -73,7 +78,7 @@ To run the application, you can use the following commands:
 npm run dev
 ```
 
-### **Production** Mode
+### **Production** Mode 
 
 First, compile the TypeScript code:
 
@@ -85,6 +90,12 @@ Then, start the application:
 
 ```
 npm start
+```
+
+### Production Mode (Docker)
+
+```
+docker-compose up --build
 ```
 
 ## API Documentation

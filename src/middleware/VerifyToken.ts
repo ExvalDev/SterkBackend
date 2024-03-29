@@ -17,20 +17,20 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
   // Verify the JWT token is well-formed and valid
   jwt.verify(token, ACCESS_TOKEN_SECRET, async (err, decoded) => {
     if (err) {
-      throw new HTTP401Error("Unauthorized: Invalid token");
+      return next(new HTTP401Error("Unauthorized: Invalid token!"));
     }
 
     // Token is valid, now check if it matches the hashed token for this user in the database
     try {
       const user = await User.findByPk(decoded.id); // Assuming the JWT contains the user ID as 'id'
       if (!user) {
-        throw new HTTP401Error("Unauthorized: User not found");
+        return next(new HTTP401Error("Unauthorized: User not found"));
       }
 
       // Compare the provided token with the hashed token stored in the database
       const tokenIsValid = await bcrypt.compare(token, user.access_token);
       if (!tokenIsValid) {
-        throw new HTTP401Error("Unauthorized: Token mismatch");
+        return next(new HTTP401Error("Unauthorized: Token mismatch"));
       }
 
       req.body.user = {

@@ -1,27 +1,32 @@
-import { Express } from "express";
-import { unitRoutes } from "./v1/units";
-import { trainingDataRoutes } from "./v1/trainingData";
-import { nfcTagsRoutes } from "./v1/nfcTags";
-import { machineCategoryRoutes } from "./v1/machinecategories";
-import { studioRoutes } from "./v1/studios";
-import { sessionRoutes } from "./v1/sessions";
-import { userRoutes } from "./v1/users";
-import { authRoutes } from "./v1/auth";
+import express, { Express } from "express";
+
+import swaggerUi from "swagger-ui-express";
+import { config } from "@/config/swagger";
+
+import { pageRoutes } from "./pages";
+
 import verifyToken from "@/middleware/VerifyToken";
 
+import { authRoutes } from "./auth";
+
+import ErrorHandler from "@/middleware/ErrorHandler";
+import { v1Routes } from "./v1/v1Routes";
+
 export const createRoutes = (app: Express) => {
-  // API
+  // STATIC
+  app.use(express.static("public"));
+
+  // PAGES
+  app.use(pageRoutes);
+
+  // SWAGGER
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(config));
+
+  // AUTH
   app.use("/api", authRoutes);
 
-  // VERIFY TOKEN
-  app.use(verifyToken);
+  app.use("/api/v1", verifyToken, v1Routes);
 
-  //V1
-  app.use("/api/v1", userRoutes);
-  app.use("/api/v1", unitRoutes);
-  app.use("/api/v1", nfcTagsRoutes);
-  app.use("/api/v1", trainingDataRoutes);
-  app.use("/api/v1", machineCategoryRoutes);
-  app.use("/api/v1", studioRoutes);
-  app.use("/api/v1", sessionRoutes);
+  // ERROR HANDLER - Middleware
+  app.use(ErrorHandler);
 };
