@@ -95,7 +95,9 @@ class UserController {
    */
   static async getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
-      const users = await User.findAll();
+      const users = await User.findAll({
+        attributes: { exclude: ["password"] }, // Exclude password from results
+      });
       logger.info(`Retrieved ${users.length} users`);
       return res.json(users);
     } catch (error) {
@@ -134,7 +136,8 @@ class UserController {
         throw new HTTP404Error("User not found");
       }
       logger.info(`Retrieved user: ${user.email}`);
-      return res.json(user);
+      const { password: _, ...userWithoutPassword } = user.toJSON();
+      return res.json(userWithoutPassword);
     } catch (error) {
       next(error);
     }
@@ -199,7 +202,8 @@ class UserController {
 
       user = await user.update({ name, email, language, roleId });
       logger.info(`Updated user: ${user.email}`);
-      return res.json(user);
+      const { password: _, ...userWithoutPassword } = user.toJSON();
+      return res.json(userWithoutPassword);
     } catch (error) {
       next(error);
     }
