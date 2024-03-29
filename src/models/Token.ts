@@ -29,9 +29,9 @@ import User from "./User";
  *         refresh_token:
  *           type: string
  *           description: The refresh_token of the user
- *        sessionId:
+ *         sessionId:
  *          type: string
- *         description: The session id of the user
+ *          description: The session id of the user
  *         userId:
  *           type: integer
  *           description: The id of the user

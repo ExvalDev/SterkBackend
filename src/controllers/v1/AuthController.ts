@@ -13,9 +13,9 @@ import {
 import { generateAccessToken, generateRefreshToken } from "@/util/helpers";
 import { HttpStatusCode } from "@/types/HttpStatusCode";
 import Token from "@/models/Token";
-import { UUID } from "sequelize";
 import Role from "@/models/Role";
 
+const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 
 class AuthController {
@@ -199,6 +199,70 @@ class AuthController {
           refreshToken: newRefreshToken,
         });
       });
+    } catch (error) {
+      next(error);
+    }
+  }
+  /**
+   * @swagger
+   * /api/v1/auth/logout:
+   *   get:
+   *     summary: Log out a user
+   *     tags: [Auth]
+   *     description: This endpoint is used to log out a user by invalidating the current access token. The access token should be provided in the Authorization header.
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: Successfully logged out. The session associated with the access token has been invalidated.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 message:
+   *                   type: string
+   *                   example: Successfully logged out
+   *       401:
+   *         description: Unauthorized. Possible reasons include no access token provided, or the provided access token is invalid or expired.
+   *       404:
+   *         description: Session not found. Indicates that the session associated with the provided token could not be found.
+   *       500:
+   *         description: Server error. Something went wrong on the server.
+   */
+  static async logout(req: Request, res: Response, next: NextFunction) {
+    try {
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        throw new HTTP401Error("Unauthorized: No access token provided");
+      }
+      const accessToken = authHeader.split(" ")[1];
+
+      // Verify the access token to extract the sessionId or userId
+      jwt.verify(accessToken, ACCESS_TOKEN_SECRET, async (err, decoded) => {
+        if (err) {
+          throw new HTTP401Error("Unauthorized: Invalid token!");
+        }
+
+        try {
+          const token = await Token.findOne({
+            where: {
+              userId: decoded.id,
+              sessionId: decoded.session,
+            },
+          });
+          if (!token) {
+            throw new HTTP404Error("Session not found");
+          }
+
+          await token.destroy();
+        } catch (error) {
+          next(error);
+        }
+      });
+      return res
+        .status(HttpStatusCode.OK)
+        .json({ message: "Successfully logged out" });
     } catch (error) {
       next(error);
     }
