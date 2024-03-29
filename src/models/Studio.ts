@@ -51,6 +51,7 @@ Studio.init(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,

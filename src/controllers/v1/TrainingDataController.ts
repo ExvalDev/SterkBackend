@@ -51,6 +51,7 @@ class TrainingDataController {
         unitId,
         machineCategoryId,
         sessionId,
+        userId: req.body.user.id,
       })
         .then((trainingData) => {
           logger.info(`Training data created: ${trainingData.id}`);

@@ -35,7 +35,11 @@ class SessionController {
   static async createSession(req: Request, res: Response, next: NextFunction) {
     try {
       const { sessionStart, sessionEnd } = req.body;
-      return await Session.create({ sessionStart, sessionEnd })
+      return await Session.create({
+        sessionStart,
+        sessionEnd,
+        userId: req.body.user.id,
+      })
         .then((session) => {
           logger.info(`Session created: ${session.id}`);
           return res.status(201).json(session);

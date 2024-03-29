@@ -14,6 +14,7 @@ import { generateAccessToken, generateRefreshToken } from "@/util/helpers";
 import { HttpStatusCode } from "@/types/HttpStatusCode";
 import Token from "@/models/Token";
 import Role from "@/models/Role";
+import logger from "@/config/winston";
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
@@ -47,24 +48,25 @@ class AuthController {
         throw new HTTP409Error("Email already in use");
       }
 
-      const role = await Role.findByPk(roleId);
-      if (!role) {
-        throw new HTTP404Error("Role not found");
+      if (!password) {
+        throw new HTTP400Error("Password is required");
       }
-
       const hashedPassword = await bcrypt.hash(password, 12);
-      const user = await User.create({
+      return await User.create({
         name,
         email,
         password: hashedPassword,
         language,
         roleId,
-      });
-
-      // Do not return password and other sensitive info
-      const { password: _, ...userWithoutPassword } = user.toJSON();
-
-      return res.status(201).json(userWithoutPassword);
+      })
+        .then((user) => {
+          logger.info(`User registered: ${user.email}`);
+          const { password: _, ...userWithoutPassword } = user.toJSON();
+          return res.status(201).json(userWithoutPassword);
+        })
+        .catch((error) => {
+          throw new HTTP400Error("BAD REQUEST", error);
+        });
     } catch (error) {
       next(error);
     }
@@ -99,6 +101,9 @@ class AuthController {
   static async login(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = req.body;
+      if (!email || !password) {
+        throw new HTTP400Error("Email and password are required");
+      }
       const user = await User.findOne({ where: { email } });
       if (!user) {
         throw new HTTP404Error("Authentication failed. User not found.");

@@ -4,22 +4,20 @@ import { HttpStatusCode } from "../types/HttpStatusCode";
 class BaseError extends Error {
   public readonly name: string;
   public readonly httpCode: HttpStatusCode;
-  public readonly description: string | string[];
+  public readonly validationErrors: string[];
 
   constructor(
     name: string,
     httpCode: HttpStatusCode,
-    description: string | string[]
+    message: string,
+    validationErrors?: string[]
   ) {
-    const message = Array.isArray(description)
-      ? description.join(" ")
-      : description;
     super(message);
     Object.setPrototypeOf(this, new.target.prototype);
 
     this.name = name;
     this.httpCode = httpCode;
-    this.description = description;
+    this.validationErrors = validationErrors;
 
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this);
@@ -46,13 +44,21 @@ export class HTTP400Error extends BaseError {
         });
       }
     }
-
     if (error instanceof ForeignKeyConstraintError) {
       const foreignKeyError = error as ForeignKeyConstraintError;
       message = `This ${foreignKeyError.fields[0]} does not exist!`;
     }
-    const description = errors.length > 0 ? errors : message;
-    super("BAD REQUEST", HttpStatusCode.BAD_REQUEST, description);
+
+    if (errors.length > 0) {
+      super(
+        "BAD REQUEST",
+        HttpStatusCode.BAD_REQUEST,
+        "Validation Errors",
+        errors
+      );
+    } else {
+      super("BAD REQUEST", HttpStatusCode.BAD_REQUEST, message);
+    }
   }
 }
 

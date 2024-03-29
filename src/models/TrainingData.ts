@@ -79,6 +79,38 @@ TrainingData.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    unitId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      references: {
+        model: Unit,
+        key: "id",
+      },
+      allowNull: false,
+    },
+    machineCategoryId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      references: {
+        model: MachineCategory,
+        key: "id",
+      },
+      allowNull: false,
+    },
+    sessionId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      references: {
+        model: Session,
+        key: "id",
+      },
+      allowNull: false,
+    },
+    userId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      references: {
+        model: User,
+        key: "id",
+      },
+      allowNull: false,
+    },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   },

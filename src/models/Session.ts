@@ -61,6 +61,13 @@ Session.init(
     },
     sessionEnd: {
       type: DataTypes.STRING,
+    },
+    userId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      references: {
+        model: User,
+        key: "id",
+      },
       allowNull: false,
     },
     createdAt: DataTypes.DATE,
