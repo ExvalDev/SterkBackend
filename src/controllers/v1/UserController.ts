@@ -3,6 +3,7 @@ import User from "@/models/User"; // Adjust the path as necessary
 import { HTTP404Error, HTTP400Error, HTTP409Error } from "@/util/error"; // Adjust the path as necessary
 import bcrypt from "bcrypt";
 import logger from "@/config/winston";
+import { HttpStatusCode } from "@/types/HttpStatusCode";
 
 class UserController {
   /**
@@ -238,7 +239,7 @@ class UserController {
 
       await user.destroy();
       logger.info(`User deleted: ${id}`);
-      return res.status(204).send(); // No content to send back, indicating successful deletion
+      return res.status(204).send();
     } catch (error) {
       next(error);
     }

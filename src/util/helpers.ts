@@ -8,12 +8,12 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 const ACCESS_TOKEN_LIFE = process.env.ACCESS_TOKEN_LIFE;
 const REFRESH_TOKEN_LIFE = process.env.REFRESH_TOKEN_LIFE;
 
-export const generateAccessToken = async (user: User) => {
+export const generateAccessToken = async (user: User, sessionId: string) => {
   const role = await Role.findByPk(user.roleId);
   const roleName = role ? role.name : "User";
 
   const access_token = jwt.sign(
-    { id: user.id, role: roleName },
+    { id: user.id, role: roleName, session: sessionId },
     ACCESS_TOKEN_SECRET,
     {
       expiresIn: ACCESS_TOKEN_LIFE,
@@ -23,12 +23,12 @@ export const generateAccessToken = async (user: User) => {
   return access_token;
 };
 
-export const generateRefreshToken = async (user: User) => {
+export const generateRefreshToken = async (user: User, sessionId: string) => {
   const role = await Role.findByPk(user.roleId);
   const roleName = role ? role.name : "User";
 
   const refresh_token = jwt.sign(
-    { id: user.id, role: roleName },
+    { id: user.id, role: roleName, session: sessionId },
     REFRESH_TOKEN_SECRET,
     {
       expiresIn: REFRESH_TOKEN_LIFE,

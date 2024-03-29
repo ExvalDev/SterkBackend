@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { HTTP401Error } from "@/util/error";
+import Token from "@/models/Token";
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 
@@ -20,17 +21,29 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
       return next(new HTTP401Error("Unauthorized: Invalid token!"));
     }
 
-    // Token is valid, now check if it matches the hashed token for this user in the database
     try {
-      const user = await User.findByPk(decoded.id); // Assuming the JWT contains the user ID as 'id'
-      if (!user) {
-        return next(new HTTP401Error("Unauthorized: User not found"));
+      // Find all tokens for the user decoded from the JWT
+      const tokens = await Token.findAll({
+        where: { userId: decoded.id }, // Assuming 'decoded.id' is the user ID
+      });
+
+      if (!tokens || tokens.length === 0) {
+        return next(new HTTP401Error("Unauthorized: No tokens found for user"));
       }
 
-      // Compare the provided token with the hashed token stored in the database
-      const tokenIsValid = await bcrypt.compare(token, user.access_token);
+      // Check if any of the user's tokens match the provided token
+      const tokenIsValid = await tokens.some(async (token) => {
+        return await bcrypt.compare(token, token.access_token);
+      });
+
       if (!tokenIsValid) {
         return next(new HTTP401Error("Unauthorized: Token mismatch"));
+      }
+
+      // Assuming token is valid, fetch the user's details
+      const user = await User.findByPk(decoded.id);
+      if (!user) {
+        return next(new HTTP401Error("Unauthorized: User not found"));
       }
 
       req.body.user = {
@@ -40,6 +53,7 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
         language: user.language,
         role: decoded.role,
       };
+
       next();
     } catch (error) {
       next(error);

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { v4 as uuidv4 } from "uuid";
 import User from "@/models/User"; // Adjust the path as necessary
 import {
   HTTP400Error,
@@ -11,7 +12,9 @@ import {
 } from "@/util/error"; // Adjust the path as necessary
 import { generateAccessToken, generateRefreshToken } from "@/util/helpers";
 import { HttpStatusCode } from "@/types/HttpStatusCode";
-import logger from "@/config/winston";
+import Token from "@/models/Token";
+import { UUID } from "sequelize";
+import Role from "@/models/Role";
 
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 
@@ -42,6 +45,11 @@ class AuthController {
       const userExists = await User.findOne({ where: { email } });
       if (userExists) {
         throw new HTTP409Error("Email already in use");
+      }
+
+      const role = await Role.findByPk(roleId);
+      if (!role) {
+        throw new HTTP404Error("Role not found");
       }
 
       const hashedPassword = await bcrypt.hash(password, 12);
@@ -101,12 +109,16 @@ class AuthController {
         throw new HTTP401Error("Authentication failed. Wrong password.");
       }
 
-      const access_token = await generateAccessToken(user);
-      const refresh_token = await generateRefreshToken(user);
+      const sessionId = uuidv4();
+      const access_token = await generateAccessToken(user, sessionId);
+      const refresh_token = await generateRefreshToken(user, sessionId);
 
-      user.access_token = await bcrypt.hash(access_token, 12);
-      user.refresh_token = await bcrypt.hash(refresh_token, 12);
-      user.save();
+      Token.create({
+        sessionId: sessionId,
+        access_token: await bcrypt.hash(access_token, 12),
+        refresh_token: await bcrypt.hash(refresh_token, 12),
+        userId: user.id,
+      });
 
       return res.status(HttpStatusCode.OK).json({
         message: "User logged in successfully",
@@ -156,20 +168,30 @@ class AuthController {
       // Verify refresh token
       jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, async (err, decoded) => {
         if (err) {
-          throw new HTTP403Error("Invalid refresh token");
+          return next(new HTTP403Error("Invalid refresh token"));
         }
 
-        // Refresh token is valid; find the user and generate new tokens
         const user = await User.findByPk(decoded.id);
         if (!user) {
-          throw new HTTP404Error("User not found");
+          return next(new HTTP404Error("User not found"));
         }
 
-        const newAccessToken = await generateAccessToken(user);
-        const newRefreshToken = await generateRefreshToken(user);
+        const sessionId = decoded.session;
+        const token = await Token.findOne({
+          where: {
+            sessionId: sessionId,
+            userId: decoded.id,
+          },
+        });
+        if (!token) {
+          return next(new HTTP404Error("No Token found for this user."));
+        }
 
-        user.access_token = await bcrypt.hash(newAccessToken, 12);
-        user.refresh_token = await bcrypt.hash(newRefreshToken, 12);
+        const newAccessToken = await generateAccessToken(user, sessionId);
+        const newRefreshToken = await generateRefreshToken(user, sessionId);
+        token.access_token = await bcrypt.hash(newAccessToken, 12);
+        token.refresh_token = await bcrypt.hash(newRefreshToken, 12);
+        await token.save();
 
         res.json({
           userId: user.id,

@@ -7,6 +7,7 @@ import NFCTag from "@/models/NFCTag";
 import Machine from "@/models/Machine";
 import User from "@/models/User";
 import Role from "@/models/Role";
+import Token from "@/models/Token";
 import logger from "@/config/winston";
 
 const options = {
@@ -47,6 +48,10 @@ export const createAssociations = () => {
     ...options,
     foreignKey: "userId",
   });
+  User.hasMany(Token, {
+    ...options,
+    foreignKey: "userId",
+  });
 
   TrainingData.belongsTo(Unit, { foreignKey: "unitId" });
   TrainingData.belongsTo(MachineCategory, { foreignKey: "machineCategoryId" });
@@ -56,6 +61,7 @@ export const createAssociations = () => {
   Machine.belongsTo(NFCTag, { foreignKey: "nfcTagId" });
   User.belongsTo(Role, { foreignKey: "roleId" });
   Session.belongsTo(User, { foreignKey: "userId" });
+  Token.belongsTo(User, { foreignKey: "userId" });
 
   logger.info("Associations created successfully");
 };
