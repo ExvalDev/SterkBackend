@@ -1,13 +1,16 @@
-import express from "express";
+import { HttpStatusCode } from "@/types/HttpStatusCode";
+import express, { NextFunction, Request, Response } from "express";
 import path from "path";
 
 const router = express.Router();
 
-router.get("/", (req, res, next) => {
+router.get("/", (req: Request, res: Response, next: NextFunction) => {
   try {
-    return res
-      .status(200)
-      .sendFile(path.join(__dirname, "..", "pages", "index.html"));
+    const filePath =
+      process.env.NODE_ENV === "development"
+        ? path.join(__dirname, "..", "pages", "index.html")
+        : path.join(__dirname, "..", "..", "src", "pages", "index.html");
+    return res.status(HttpStatusCode.OK).sendFile(filePath);
   } catch (error) {
     next(error);
   }
