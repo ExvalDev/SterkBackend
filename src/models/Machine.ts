@@ -70,6 +70,30 @@ Machine.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    machineCategoryId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      references: {
+        model: MachineCategory,
+        key: "id",
+      },
+      allowNull: false,
+    },
+    nfcTagId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      references: {
+        model: NFCTag,
+        key: "id",
+      },
+      allowNull: false,
+    },
+    studioId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      references: {
+        model: Studio,
+        key: "id",
+      },
+      allowNull: false,
+    },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   },

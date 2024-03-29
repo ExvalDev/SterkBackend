@@ -57,6 +57,10 @@ export const createAssociations = () => {
     ...options,
     foreignKey: "studioId",
   });
+  Studio.hasMany(Machine, {
+    ...options,
+    foreignKey: "studioId",
+  });
 
   TrainingData.belongsTo(Unit, { foreignKey: "unitId" });
   TrainingData.belongsTo(MachineCategory, { foreignKey: "machineCategoryId" });
@@ -64,6 +68,7 @@ export const createAssociations = () => {
   TrainingData.belongsTo(User, { foreignKey: "userId" });
   Machine.belongsTo(MachineCategory, { foreignKey: "machineCategoryId" });
   Machine.belongsTo(NFCTag, { foreignKey: "nfcTagId" });
+  Machine.belongsTo(Studio, { foreignKey: "studioId" });
   User.belongsTo(Role, { foreignKey: "roleId" });
   Session.belongsTo(User, { foreignKey: "userId" });
   Token.belongsTo(User, { foreignKey: "userId" });

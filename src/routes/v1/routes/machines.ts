@@ -33,4 +33,4 @@ router.put(
   MachineController.updateMachine
 );
 
-export { router as machinesRoutes };
+export { router as machineRoutes };
