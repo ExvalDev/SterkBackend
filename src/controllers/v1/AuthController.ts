@@ -13,8 +13,8 @@ import {
 import { generateAccessToken, generateRefreshToken } from "@/util/helpers";
 import { HttpStatusCode } from "@/types/HttpStatusCode";
 import Token from "@/models/Token";
-import Role from "@/models/Role";
 import logger from "@/config/winston";
+import TokenResponse from "@/types/Token";
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
@@ -125,11 +125,15 @@ class AuthController {
         userId: user.id,
       });
 
-      return res.status(HttpStatusCode.OK).json({
-        message: "User logged in successfully",
-        access_token,
-        refresh_token,
-      });
+      return res
+        .status(HttpStatusCode.OK)
+        .json(
+          new TokenResponse(
+            "User logged in successfully",
+            access_token,
+            refresh_token
+          )
+        );
     } catch (error) {
       next(error);
     }
@@ -198,11 +202,13 @@ class AuthController {
         token.refresh_token = await bcrypt.hash(newRefreshToken, 12);
         await token.save();
 
-        res.json({
-          userId: user.id,
-          access_token: newAccessToken,
-          refresh_token: newRefreshToken,
-        });
+        res.json(
+          new TokenResponse(
+            `Token refreshed for user: ${user.id}`,
+            newAccessToken,
+            newRefreshToken
+          )
+        );
       });
     } catch (error) {
       next(error);
