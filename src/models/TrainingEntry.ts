@@ -16,7 +16,7 @@ import User from "./User";
  * @swagger
  * components:
  *   schemas:
- *     TrainingData:
+ *     TrainingEntry:
  *       type: object
  *       required:
  *         - value
@@ -26,7 +26,7 @@ import User from "./User";
  *       properties:
  *         id:
  *           type: number
- *           description: The auto-generated id of the trainingData
+ *           description: The auto-generated id of the Training Entry
  *         value:
  *           type: number
  *           description: The description of your spending
@@ -35,18 +35,18 @@ import User from "./User";
  *           description: The id of the unit
  *         machineCategoryId:
  *           type: number
- *           description: The id of the category the trainingData belongs to
+ *           description: The id of the category the Training Entry belongs to
  *         sessionId:
  *           type: number
- *           description: The id of the session the trainingData belongs to
+ *           description: The id of the session the Training Entry belongs to
  *         createdAt:
  *           type: string
  *           format: date
- *           description: The auto-generated creation date of the spending
+ *           description: The auto-generated creation date of the Training Entry
  *         updatedAt:
  *           type: string
  *           format: date
- *           description: The auto-generated last update of the spending
+ *           description: The auto-generated last update of the Training Entry
  *         userId:
  *           type: number
  *           description: The id of the user
@@ -54,9 +54,9 @@ import User from "./User";
  *           type: number
  *           description: The id of the category
  */
-class TrainingData extends Model<
-  InferAttributes<TrainingData>,
-  InferCreationAttributes<TrainingData>
+class TrainingEntry extends Model<
+  InferAttributes<TrainingEntry>,
+  InferCreationAttributes<TrainingEntry>
 > {
   declare id: CreationOptional<number>;
   declare value: string;
@@ -68,7 +68,7 @@ class TrainingData extends Model<
   declare updatedAt: CreationOptional<Date>;
 }
 
-TrainingData.init(
+TrainingEntry.init(
   {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -115,11 +115,11 @@ TrainingData.init(
     updatedAt: DataTypes.DATE,
   },
   {
-    modelName: "TrainingData",
-    tableName: "training_data",
+    modelName: "TrainingEntry",
+    tableName: "training_entries",
     timestamps: true,
     sequelize,
   }
 );
 
-export default TrainingData;
+export default TrainingEntry;

@@ -1,18 +1,19 @@
 import { NextFunction, Request, Response } from "express";
-import TrainingData from "@/models/TrainingData"; // Adjust the path as necessary
+import TrainingEntry from "@/models/TrainingEntry"; // Adjust the path as necessary
 import { HTTP400Error, HTTP404Error } from "@/util/error"; // Adjust the path as necessary
 import logger from "@/config/winston";
+import Unit from "@/models/Unit";
 
-class TrainingDataController {
+class TrainingEntryController {
   /**
    * @swagger
    * tags:
-   *   name: TrainingData
-   *   description: API for Training Data
-   * /api/v1/trainingdata:
+   *   name: TrainingEntry
+   *   description: API for Training Entry
+   * /api/v1/trainingEntry:
    *   post:
-   *     summary: Create a new training data entry
-   *     tags: [TrainingData]
+   *     summary: Create a new training entry
+   *     tags: [TrainingEntry]
    *     requestBody:
    *       required: true
    *       content:
@@ -35,27 +36,38 @@ class TrainingDataController {
    *                type: integer
    *     responses:
    *       201:
-   *         description: Training data created successfully
+   *         description: Training entry created successfully
    *       400:
    *         description: Bad request
    */
-  static async createTrainingData(
+  static async createTrainingEntry(
     req: Request,
     res: Response,
     next: NextFunction
   ) {
     try {
       const { value, unitId, machineCategoryId, sessionId } = req.body;
-      return await TrainingData.create({
+      return await TrainingEntry.create({
         value,
         unitId,
         machineCategoryId,
         sessionId,
         userId: req.body.user.id,
       })
-        .then((trainingData) => {
-          logger.info(`Training data created: ${trainingData.id}`);
-          return res.status(201).json(trainingData);
+        .then(async (trainingEntry) => {
+          const trainingEntryWithUnit = await TrainingEntry.findByPk(
+            trainingEntry.id,
+            {
+              include: [
+                {
+                  model: Unit,
+                },
+              ],
+              attributes: { exclude: ["userId"] },
+            }
+          );
+          logger.info(`Training data created: ${trainingEntry.id}`);
+          return res.status(201).json(trainingEntryWithUnit);
         })
         .catch((error) => {
           throw new HTTP400Error("Bad Request", error);
@@ -67,31 +79,32 @@ class TrainingDataController {
 
   /**
    * @swagger
-   * /api/v1/trainingdata:
+   * /api/v1/trainingEntry:
    *   get:
-   *     summary: Get all training data entries
-   *     tags: [TrainingData]
+   *     summary: Get all training entries
+   *     tags: [TrainingEntry]
    *     responses:
    *       200:
-   *         description: A list of training data entries
+   *         description: A list of training entries
    *         content:
    *           application/json:
    *             schema:
    *               type: array
    *               items:
-   *                 $ref: '#/components/schemas/TrainingData'
+   *                 $ref: '#/components/schemas/TrainingEntry'
    */
-  static async getAllTrainingData(
+  static async getAllTrainingEntries(
     req: Request,
     res: Response,
     next: NextFunction
   ) {
     try {
-      const trainingDataEntries = await TrainingData.findAll();
-      logger.info(
-        `Retrieved ${trainingDataEntries.length} training data entries`
-      );
-      return res.json(trainingDataEntries);
+      const trainingEntries = await TrainingEntry.findAll({
+        include: [{ model: Unit }],
+        attributes: { exclude: ["userId"] },
+      });
+      logger.info(`Retrieved ${trainingEntries.length} training data entries`);
+      return res.json(trainingEntries);
     } catch (error) {
       next(error);
     }
@@ -99,10 +112,10 @@ class TrainingDataController {
 
   /**
    * @swagger
-   * /trainingdata/user:
+   * /trainingEntry/user:
    *   get:
-   *     summary: Retrieves all training data entries associated with a specific user
-   *     tags: [TrainingData]
+   *     summary: Retrieves all training entries associated with a specific user
+   *     tags: [TrainingEntry]
    *     responses:
    *       200:
    *         description: An array of training data entries
@@ -111,23 +124,24 @@ class TrainingDataController {
    *             schema:
    *               type: array
    *               items:
-   *                 $ref: '#/components/schemas/TrainingData'
+   *                 $ref: '#/components/schemas/TrainingEntry'
    */
-  static async getTrainingDataByUser(
+  static async getTrainingEntriesByUser(
     req: Request,
     res: Response,
     next: NextFunction
   ) {
     try {
       const { id } = req.body.user;
-      const trainingDataEntries = await TrainingData.findAll({
+      const trainingEntries = await TrainingEntry.findAll({
         where: { userId: id },
         attributes: { exclude: ["userId"] },
+        include: [{ model: Unit }],
       });
       logger.info(
-        `Retrieved ${trainingDataEntries.length} training data entries for user ${id}`
+        `Retrieved ${trainingEntries.length} training data entries for user ${id}`
       );
-      return res.json(trainingDataEntries);
+      return res.json(trainingEntries);
     } catch (error) {
       next(error);
     }
@@ -135,41 +149,44 @@ class TrainingDataController {
 
   /**
    * @swagger
-   * /api/v1/trainingdata/{id}:
+   * /api/v1/trainingEntry/{id}:
    *   get:
    *     summary: Get a training data entry by ID
-   *     tags: [TrainingData]
+   *     tags: [TrainingEntry]
    *     parameters:
    *      - in: path
    *        name: id
    *        schema:
    *          type: integer
    *        required: true
-   *        description: ID of the training data to get
+   *        description: ID of the training entry to get
    *     responses:
    *       200:
-   *         description: Training data entry details
+   *         description: Training entry details
    *         content:
    *           application/json:
    *             schema:
-   *               $ref: '#/components/schemas/TrainingData'
+   *               $ref: '#/components/schemas/TrainingEntry'
    *       404:
    *         description: Training data not found
    */
-  static async getTrainingDataById(
+  static async getTrainingEntryById(
     req: Request,
     res: Response,
     next: NextFunction
   ) {
     try {
       const { id } = req.params;
-      const trainingData = await TrainingData.findByPk(id);
+      const trainingEntry = await TrainingEntry.findByPk(id, {
+        include: [{ model: Unit }],
+        attributes: { exclude: ["userId"] },
+      });
 
-      if (!trainingData) {
-        throw new HTTP404Error("TrainingData not found");
+      if (!trainingEntry) {
+        throw new HTTP404Error("TrainingEntry not found");
       }
-      logger.info(`Retrieved training data: ${trainingData.id}`);
-      return res.json(trainingData);
+      logger.info(`Retrieved training data: ${trainingEntry.id}`);
+      return res.json(trainingEntry);
     } catch (error) {
       next(error);
     }
@@ -177,17 +194,17 @@ class TrainingDataController {
 
   /**
    * @swagger
-   * /api/v1/trainingdata/{id}:
+   * /api/v1/trainingEntry/{id}:
    *   put:
-   *     summary: Update a training data entry
-   *     tags: [TrainingData]
+   *     summary: Update a training entry
+   *     tags: [TrainingEntry]
    *     parameters:
    *      - in: path
    *        name: id
    *        schema:
    *          type: integer
    *        required: true
-   *        description: ID of the training data to update
+   *        description: ID of the training entry to update
    *     requestBody:
    *       required: true
    *       content:
@@ -210,11 +227,11 @@ class TrainingDataController {
    *                type: integer
    *     responses:
    *       200:
-   *         description: Training data updated successfully
+   *         description: Training Entry updated successfully
    *       404:
-   *         description: Training data not found
+   *         description: Training Entry not found
    */
-  static async updateTrainingData(
+  static async updateTrainingEntry(
     req: Request,
     res: Response,
     next: NextFunction
@@ -223,22 +240,36 @@ class TrainingDataController {
       const { id } = req.params;
       const { value, unitId, machineCategoryId, sessionId } = req.body;
 
-      const trainingData = await TrainingData.findByPk(id);
-      if (!trainingData) {
-        throw new HTTP404Error("TrainingData not found");
+      const trainingEntry = await TrainingEntry.findByPk(id, {
+        include: [{ model: Unit }],
+        attributes: { exclude: ["userId"] },
+      });
+      if (!trainingEntry) {
+        throw new HTTP404Error("TrainingEntry not found");
       }
 
-      trainingData.value = value ?? trainingData.value;
-      trainingData.unitId = unitId ?? trainingData.unitId;
-      trainingData.machineCategoryId =
-        machineCategoryId ?? trainingData.machineCategoryId;
-      trainingData.sessionId = sessionId ?? trainingData.sessionId;
+      trainingEntry.value = value ?? trainingEntry.value;
+      trainingEntry.unitId = unitId ?? trainingEntry.unitId;
+      trainingEntry.machineCategoryId =
+        machineCategoryId ?? trainingEntry.machineCategoryId;
+      trainingEntry.sessionId = sessionId ?? trainingEntry.sessionId;
 
-      return await trainingData
+      return await trainingEntry
         .save()
-        .then((trainingData) => {
-          logger.info(`Training data updated: ${trainingData.id}`);
-          return res.json(trainingData);
+        .then(async (trainingEntry) => {
+          const trainingEntryWithUnit = await TrainingEntry.findByPk(
+            trainingEntry.id,
+            {
+              include: [
+                {
+                  model: Unit,
+                },
+              ],
+              attributes: { exclude: ["userId"] },
+            }
+          );
+          logger.info(`Training data updated: ${trainingEntry.id}`);
+          return res.json(trainingEntryWithUnit);
         })
         .catch((error) => {
           throw new HTTP400Error("Bad Request", error);
@@ -250,36 +281,36 @@ class TrainingDataController {
 
   /**
    * @swagger
-   * /api/v1/trainingdata/{id}:
+   * /api/v1/trainingEntry/{id}:
    *   delete:
-   *     summary: Delete a training data entry by ID
-   *     tags: [TrainingData]
+   *     summary: Delete a Training Entry entry by ID
+   *     tags: [TrainingEntry]
    *     parameters:
    *      - in: path
    *        name: id
    *        schema:
    *          type: integer
    *        required: true
-   *        description: ID of the training data to delete
+   *        description: ID of the Training Entry to delete
    *     responses:
    *       204:
-   *         description: Training data deleted successfully
+   *         description: Training Entry deleted successfully
    *       404:
-   *         description: Training data not found
+   *         description: Training Entry not found
    */
-  static async deleteTrainingData(
+  static async deleteTrainingEntry(
     req: Request,
     res: Response,
     next: NextFunction
   ) {
     try {
       const { id } = req.params;
-      const trainingData = await TrainingData.findByPk(id);
-      if (!trainingData) {
-        throw new HTTP404Error("TrainingData not found");
+      const trainingEntry = await TrainingEntry.findByPk(id);
+      if (!trainingEntry) {
+        throw new HTTP404Error("TrainingEntry not found");
       }
 
-      await trainingData.destroy();
+      await trainingEntry.destroy();
       logger.info(`Deleted training data: ${id}`);
       return res.status(204).send();
     } catch (error) {
@@ -288,4 +319,4 @@ class TrainingDataController {
   }
 }
 
-export default TrainingDataController;
+export default TrainingEntryController;

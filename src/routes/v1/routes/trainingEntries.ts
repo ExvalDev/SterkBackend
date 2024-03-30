@@ -1,41 +1,41 @@
-import TrainingDataController from "@/controllers/v1/TrainingDataController";
+import TrainingDataController from "@/controllers/v1/TrainingEntryController";
 import CheckRole from "@/middleware/CheckRole";
 import { Role } from "@/types/Role";
 import express from "express";
 
 const router = express.Router();
 
-const path = "/trainingData";
+const path = "/trainingEntries";
 
 router.get(
   path + "",
   CheckRole([Role.ADMIN, Role.STUDIO_OWNER]),
-  TrainingDataController.getAllTrainingData
+  TrainingDataController.getAllTrainingEntries
 );
 router.get(
   path + "/user",
   CheckRole([Role.ADMIN, Role.STUDIO_OWNER, Role.USER]),
-  TrainingDataController.getTrainingDataByUser
+  TrainingDataController.getTrainingEntriesByUser
 );
 router.get(
   path + "/:id",
   CheckRole([Role.ADMIN, Role.STUDIO_OWNER, Role.USER]),
-  TrainingDataController.getTrainingDataById
+  TrainingDataController.getTrainingEntryById
 );
 router.post(
   path + "",
   CheckRole([Role.ADMIN, Role.STUDIO_OWNER, Role.USER]),
-  TrainingDataController.createTrainingData
+  TrainingDataController.createTrainingEntry
 );
 router.delete(
   path + "/:id",
   CheckRole([Role.ADMIN, Role.STUDIO_OWNER, Role.USER]),
-  TrainingDataController.deleteTrainingData
+  TrainingDataController.deleteTrainingEntry
 );
 router.put(
   path + "/:id",
   CheckRole([Role.ADMIN, Role.STUDIO_OWNER, Role.USER]),
-  TrainingDataController.updateTrainingData
+  TrainingDataController.updateTrainingEntry
 );
 
-export { router as trainingDataRoutes };
+export { router as trainingEntryRoutes };

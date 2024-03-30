@@ -39,4 +39,4 @@ sequelize
     app.listen(port);
     logger.warn(`Server running on port ${port}`);
   })
-  .catch((error) => logger.info(error));
+  .catch((error) => logger.error(error.message));
