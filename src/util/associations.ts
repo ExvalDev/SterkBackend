@@ -1,5 +1,5 @@
 // Models
-import TrainingData from "@/models/TrainingData";
+import TrainingEntry from "@/models/TrainingEntry";
 import Unit from "@/models/Unit";
 import MachineCategory from "@/models/MachineCategory";
 import Session from "@/models/Session";
@@ -17,15 +17,15 @@ const options = {
 };
 
 export const createAssociations = () => {
-  Unit.hasMany(TrainingData, {
+  Unit.hasMany(TrainingEntry, {
     ...options,
     foreignKey: "unitId",
   });
-  MachineCategory.hasMany(TrainingData, {
+  MachineCategory.hasMany(TrainingEntry, {
     ...options,
     foreignKey: "machineCategoryId",
   });
-  Session.hasMany(TrainingData, {
+  Session.hasMany(TrainingEntry, {
     ...options,
     foreignKey: "sessionId",
   });
@@ -45,7 +45,7 @@ export const createAssociations = () => {
     ...options,
     foreignKey: "userId",
   });
-  User.hasMany(TrainingData, {
+  User.hasMany(TrainingEntry, {
     ...options,
     foreignKey: "userId",
   });
@@ -62,10 +62,10 @@ export const createAssociations = () => {
     foreignKey: "studioId",
   });
 
-  TrainingData.belongsTo(Unit, { foreignKey: "unitId" });
-  TrainingData.belongsTo(MachineCategory, { foreignKey: "machineCategoryId" });
-  TrainingData.belongsTo(Session, { foreignKey: "sessionId" });
-  TrainingData.belongsTo(User, { foreignKey: "userId" });
+  TrainingEntry.belongsTo(Unit, { foreignKey: "unitId" });
+  TrainingEntry.belongsTo(MachineCategory, { foreignKey: "machineCategoryId" });
+  TrainingEntry.belongsTo(Session, { foreignKey: "sessionId" });
+  TrainingEntry.belongsTo(User, { foreignKey: "userId" });
   Machine.belongsTo(MachineCategory, { foreignKey: "machineCategoryId" });
   Machine.belongsTo(NFCTag, { foreignKey: "nfcTagId" });
   Machine.belongsTo(Studio, { foreignKey: "studioId" });

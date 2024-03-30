@@ -829,16 +829,16 @@
 			]
 		},
 		{
-			"name": "TrainingData",
+			"name": "Training Entries",
 			"item": [
 				{
-					"name": "CREATE Training Data",
+					"name": "CREATE Training Entry",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"value\": \"Test\",\n    \"unitId\": 1,\n    \"machineCategoryId\": 1,\n    \"sessionId\": 2\n\n}",
+							"raw": "{\n    \"value\": \"Test\",\n    \"unitId\": 1,\n    \"machineCategoryId\": 1,\n    \"sessionId\": 1\n\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -846,19 +846,19 @@
 							}
 						},
 						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/trainingData",
+							"raw": "{{protocol}}{{baseUrl}}{{version}}/trainingEntries",
 							"host": [
 								"{{protocol}}{{baseUrl}}{{version}}"
 							],
 							"path": [
-								"trainingData"
+								"trainingEntries"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "GET Training Data by Id",
+					"name": "GET Training Entry by Id",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -875,12 +875,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/trainingData/:id",
+							"raw": "{{protocol}}{{baseUrl}}{{version}}/trainingEntries/:id",
 							"host": [
 								"{{protocol}}{{baseUrl}}{{version}}"
 							],
 							"path": [
-								"trainingData",
+								"trainingEntries",
 								":id"
 							],
 							"variable": [
@@ -894,7 +894,7 @@
 					"response": []
 				},
 				{
-					"name": "GET Training Data",
+					"name": "GET Training Entry by User",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -911,19 +911,49 @@
 							}
 						},
 						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/trainingData",
+							"raw": "{{protocol}}{{baseUrl}}{{version}}/trainingEntries/user",
 							"host": [
 								"{{protocol}}{{baseUrl}}{{version}}"
 							],
 							"path": [
-								"trainingData"
+								"trainingEntries",
+								"user"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "UPDATE Training Data",
+					"name": "GET Training Entry",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Kg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{baseUrl}}{{version}}/trainingEntries",
+							"host": [
+								"{{protocol}}{{baseUrl}}{{version}}"
+							],
+							"path": [
+								"trainingEntries"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE Training Entry",
 					"request": {
 						"method": "PUT",
 						"header": [],
@@ -937,12 +967,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/trainingData/:id",
+							"raw": "{{protocol}}{{baseUrl}}{{version}}/trainingEntries/:id",
 							"host": [
 								"{{protocol}}{{baseUrl}}{{version}}"
 							],
 							"path": [
-								"trainingData",
+								"trainingEntries",
 								":id"
 							],
 							"variable": [
@@ -956,7 +986,7 @@
 					"response": []
 				},
 				{
-					"name": "DELETE Training Data by Id",
+					"name": "DELETE Training Entry by Id",
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -970,12 +1000,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/trainingData/:id",
+							"raw": "{{protocol}}{{baseUrl}}{{version}}/trainingEntries/:id",
 							"host": [
 								"{{protocol}}{{baseUrl}}{{version}}"
 							],
 							"path": [
-								"trainingData",
+								"trainingEntries",
 								":id"
 							],
 							"variable": [
@@ -1000,7 +1030,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"sessionStart\": \"2024-03-29 11:36PM\"\n}",
+							"raw": "{\n    \"sessionStart\": \"2024-03-29 11:36:12\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1056,6 +1086,36 @@
 					"response": []
 				},
 				{
+					"name": "GET Session by User",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Kg\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}{{baseUrl}}{{version}}/sessions/user",
+							"host": [
+								"{{protocol}}{{baseUrl}}{{version}}"
+							],
+							"path": [
+								"sessions",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "GET Session",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -1091,7 +1151,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"sessionEnd\": \"2024-03-29 11:56PM\"\n}",
+							"raw": "{\n    \"sessionStart\": \"2024-03-29 11:56:12\",\n    \"sessionEnd\": \"2024-03-29 11:56:12\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"

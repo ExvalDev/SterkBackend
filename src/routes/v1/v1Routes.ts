@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { unitRoutes } from "./routes/units";
-import { trainingDataRoutes } from "./routes/trainingData";
+import { trainingEntryRoutes } from "./routes/trainingEntries";
 import { nfcTagsRoutes } from "./routes/nfcTags";
 import { machineCategoryRoutes } from "./routes/machinecategories";
 import { studioRoutes } from "./routes/studios";
@@ -11,7 +11,7 @@ import { machineRoutes } from "./routes/machines";
 const router = Router();
 
 router.use(unitRoutes);
-router.use(trainingDataRoutes);
+router.use(trainingEntryRoutes);
 router.use(nfcTagsRoutes);
 router.use(machineCategoryRoutes);
 router.use(machineRoutes);

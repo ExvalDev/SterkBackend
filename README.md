@@ -78,7 +78,7 @@ To run the application, you can use the following commands:
 npm run dev
 ```
 
-### **Production** Mode 
+### **Production** Mode
 
 First, compile the TypeScript code:
 
@@ -95,7 +95,7 @@ npm start
 ### Production Mode (Docker)
 
 ```
-docker-compose up --build
+docker compose -f docker-compose.yml up --build
 ```
 
 ## API Documentation
