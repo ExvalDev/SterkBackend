@@ -22,5 +22,8 @@ EXPOSE 8000
 # Define environment variable
 ENV NODE_ENV=production
 
+# Build the app
+RUN npm run build
+
 # Run your app using CMD
 CMD ["npm", "start"]
