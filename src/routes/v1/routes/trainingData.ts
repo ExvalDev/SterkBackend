@@ -9,8 +9,13 @@ const path = "/trainingData";
 
 router.get(
   path + "",
-  CheckRole([Role.ADMIN, Role.STUDIO_OWNER, Role.USER]),
+  CheckRole([Role.ADMIN, Role.STUDIO_OWNER]),
   TrainingDataController.getAllTrainingData
+);
+router.get(
+  path + "/user",
+  CheckRole([Role.ADMIN, Role.STUDIO_OWNER, Role.USER]),
+  TrainingDataController.getTrainingDataByUser
 );
 router.get(
   path + "/:id",

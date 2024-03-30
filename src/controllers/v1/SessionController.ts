@@ -80,6 +80,69 @@ class SessionController {
 
   /**
    * @swagger
+   * /sessions/user:
+   *   get:
+   *     summary: Retrieves all sessions associated with a specific user
+   *     tags: [Session]
+   *     responses:
+   *       200:
+   *         description: An array of sessions
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 type: object
+   *                 properties:
+   *                   id:
+   *                     type: integer
+   *                     description: The session ID
+   *                     example: 1
+   *                   sessionStart:
+   *                     type: string
+   *                     format: date-time
+   *                     description: The start of the session
+   *                   sessionEnd:
+   *                     type: string
+   *                     format: date-time
+   *                     description: The end of the session
+   *                   createdAt:
+   *                     type: string
+   *                     format: date-time
+   *                     description: The time the session was created
+   *                   updatedAt:
+   *                     type: string
+   *                     format: date-time
+   *                     description: The time the session was last updated
+   *       400:
+   *         description: Bad Request
+   *       404:
+   *         description: User ID not found
+   *       500:
+   *         description: Internal Server Error
+   *     security:
+   *       - bearerAuth: []
+   */
+  static async getSessionsByUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.body.user;
+      const sessions = await Session.findAll({
+        where: { userId: id },
+        attributes: { exclude: ["userId"] },
+      });
+      logger.info(`Retrieved ${sessions.length} sessions for user: ${id}`);
+      return res.json(sessions);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * @swagger
    * /api/v1/sessions/{id}:
    *   get:
    *     summary: Get a session by ID

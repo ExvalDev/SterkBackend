@@ -10,8 +10,13 @@ const path = "/sessions";
 
 router.get(
   path + "",
-  CheckRole([Role.ADMIN, Role.STUDIO_OWNER, Role.USER]),
+  CheckRole([Role.ADMIN, Role.STUDIO_OWNER]),
   SessionController.getAllSessions
+);
+router.get(
+  path + "/user",
+  CheckRole([Role.ADMIN, Role.STUDIO_OWNER, Role.USER]),
+  SessionController.getSessionsByUser
 );
 router.get(
   path + "/:id",

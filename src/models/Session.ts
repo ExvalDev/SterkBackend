@@ -56,11 +56,11 @@ Session.init(
       primaryKey: true,
     },
     sessionStart: {
-      type: DataTypes.STRING,
+      type: DataTypes.DATE,
       allowNull: false,
     },
     sessionEnd: {
-      type: DataTypes.STRING,
+      type: DataTypes.DATE,
     },
     userId: {
       type: DataTypes.INTEGER.UNSIGNED,
