@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import Machine from "@/models/Machine"; // Adjust the path as necessary
 import { HTTP400Error, HTTP404Error } from "@/util/error"; // Adjust the path as necessary
 import logger from "@/config/winston";
+import NFCTag from "@/models/NFCTag";
 
 class MachineController {
   /**
@@ -78,7 +79,14 @@ class MachineController {
    */
   static async getAllMachines(req: Request, res: Response, next: NextFunction) {
     try {
-      const machines = await Machine.findAll();
+      const machines = await Machine.findAll({
+        include: [
+          {
+            model: NFCTag,
+            as: "NFCTag",
+          },
+        ],
+      });
       logger.info(`Retrieved ${machines.length} machines`);
       return res.json(machines);
     } catch (error) {
@@ -112,7 +120,14 @@ class MachineController {
   static async getMachineById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const machine = await Machine.findByPk(id);
+      const machine = await Machine.findByPk(id, {
+        include: [
+          {
+            model: NFCTag,
+            as: "NFCTag",
+          },
+        ],
+      });
       if (!machine) {
         throw new HTTP404Error("Machine not found");
       }

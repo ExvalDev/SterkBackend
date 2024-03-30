@@ -99,6 +99,42 @@ class TrainingDataController {
 
   /**
    * @swagger
+   * /trainingdata/user:
+   *   get:
+   *     summary: Retrieves all training data entries associated with a specific user
+   *     tags: [TrainingData]
+   *     responses:
+   *       200:
+   *         description: An array of training data entries
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 $ref: '#/components/schemas/TrainingData'
+   */
+  static async getTrainingDataByUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.body.user;
+      const trainingDataEntries = await TrainingData.findAll({
+        where: { userId: id },
+        attributes: { exclude: ["userId"] },
+      });
+      logger.info(
+        `Retrieved ${trainingDataEntries.length} training data entries for user ${id}`
+      );
+      return res.json(trainingDataEntries);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * @swagger
    * /api/v1/trainingdata/{id}:
    *   get:
    *     summary: Get a training data entry by ID
