@@ -22,6 +22,18 @@ import { sequelize } from "../util/database";
  *         name:
  *           type: string
  *           description: The name of the studio
+ *         street:
+ *           type: string
+ *           description: The street name of the studio address
+ *         houseNumber:
+ *           type: string
+ *           description: The house number of the studio address
+ *         city:
+ *           type: string
+ *           description: The city of the studio address
+ *         zip:
+ *           type: string
+ *           description: The ZIP code of the studio address
  *         createdAt:
  *           type: string
  *           format: date
@@ -37,6 +49,10 @@ class Studio extends Model<
 > {
   declare id: CreationOptional<number>;
   declare name: string;
+  declare street: string;
+  declare houseNumber: string;
+  declare city: string;
+  declare zip: string;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -52,6 +68,18 @@ Studio.init(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+    },
+    street: {
+      type: DataTypes.STRING,
+    },
+    houseNumber: {
+      type: DataTypes.STRING,
+    },
+    city: {
+      type: DataTypes.STRING,
+    },
+    zip: {
+      type: DataTypes.STRING,
     },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
