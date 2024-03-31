@@ -23,7 +23,7 @@ export const createRoutes = (app: Express) => {
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(config));
 
   // AUTH
-  app.use("/api", authRoutes);
+  app.use("/api/auth", authRoutes);
 
   app.use("/api/v1", verifyToken, v1Routes);
 

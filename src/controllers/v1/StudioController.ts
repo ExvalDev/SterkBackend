@@ -24,6 +24,14 @@ class StudioController {
    *            properties:
    *              name:
    *                type: string
+   *              street:
+   *                type: string
+   *              houseNumber:
+   *                type: string
+   *              city:
+   *                type: string
+   *              zip:
+   *                type: string
    *     responses:
    *       201:
    *         description: Studio created successfully.
@@ -32,7 +40,7 @@ class StudioController {
    */
   static async createStudio(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name } = req.body;
+      const { name, street, houseNumber, city, zip } = req.body;
       return await Studio.create({ name })
         .then((studio) => {
           logger.info(`Studio created: ${studio.name}`);
@@ -133,6 +141,14 @@ class StudioController {
    *            properties:
    *              name:
    *                type: string
+   *              street:
+   *                type: string
+   *              houseNumber:
+   *                type: string
+   *              city:
+   *                type: string
+   *              zip:
+   *                type: string
    *     responses:
    *       200:
    *         description: Studio updated successfully.
@@ -142,7 +158,7 @@ class StudioController {
   static async updateStudio(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const { name } = req.body;
+      const { name, street, houseNumber, city, zip } = req.body;
 
       let studio = await Studio.findByPk(id);
       if (!studio) {
@@ -150,7 +166,7 @@ class StudioController {
       }
 
       return await studio
-        .update({ name })
+        .update({ name, street, houseNumber, city, zip })
         .then((studio) => {
           logger.info(`Updated studio: ${studio.name}`);
           return res.json(studio);
