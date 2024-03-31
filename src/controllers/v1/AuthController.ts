@@ -22,7 +22,7 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 class AuthController {
   /**
    * @swagger
-   * /api/v1/auth/register:
+   * /api/auth/register:
    *   post:
    *     summary: Register a new user
    *     tags: [Auth]
@@ -74,7 +74,7 @@ class AuthController {
 
   /**
    * @swagger
-   * /api/v1/auth/login:
+   * /api/auth/login:
    *   post:
    *     summary: Log in a user
    *     tags: [Auth]
@@ -141,11 +141,19 @@ class AuthController {
 
   /**
    * @swagger
-   * /api/v1/auth/refresh/{refreshToken}:
-   *   get:
+   * /api/auth/refresh:
+   *   post:
    *     summary: Refresh the access token
    *     tags: [Auth]
-   *     description: This endpoint is used to refresh the access token using a valid refresh token. The refresh token should be sent in the request param.
+   *     description: This endpoint is used to refresh the access token using a valid refresh token. The refresh token should be sent in the request body.
+   *     requestBody:
+   *      required: true
+   *      content:
+   *        application/json:
+   *        schema:
+   *          type: object
+   *          required:
+   *            - refresh_token
    *     responses:
    *       200:
    *         description: Successfully refreshed the access token.
@@ -169,13 +177,13 @@ class AuthController {
    */
   static async refresh(req: Request, res: Response, next: NextFunction) {
     try {
-      const { refreshToken } = req.params;
-      if (!refreshToken) {
+      const { refresh_token } = req.body;
+      if (!refresh_token) {
         throw new HTTP400Error("Refresh token required");
       }
 
       // Verify refresh token
-      jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, async (err, decoded) => {
+      jwt.verify(refresh_token, REFRESH_TOKEN_SECRET, async (err, decoded) => {
         if (err) {
           return next(new HTTP403Error("Invalid refresh token"));
         }
@@ -193,7 +201,9 @@ class AuthController {
           },
         });
         if (!token) {
-          return next(new HTTP404Error("No Token found for this user."));
+          return next(
+            new HTTP404Error("No Token found for this user and session.")
+          );
         }
 
         const newAccessToken = await generateAccessToken(user, sessionId);
@@ -216,7 +226,7 @@ class AuthController {
   }
   /**
    * @swagger
-   * /api/v1/auth/logout:
+   * /api/auth/logout:
    *   get:
    *     summary: Log out a user
    *     tags: [Auth]
