@@ -2,7 +2,7 @@ version: '3.8'
 services:
   app:
     container_name: trainTrackBackend
-    build: .
+    image: exvaldev/traintrackbackend:latest
     ports:
       - "8000:8000"
     environment:
@@ -12,6 +12,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: db
       DB_DRIVER: ${DB_DRIVER}
+      PORT: ${PORT}
     depends_on:
       - db
     networks:
