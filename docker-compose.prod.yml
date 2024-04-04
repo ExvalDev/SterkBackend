@@ -12,6 +12,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: db
       DB_DRIVER: ${DB_DRIVER}
+      PORT: ${PORT}
     depends_on:
       - db
     networks:
