@@ -27,6 +27,8 @@ jobs:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
+      - name: List files in the directory
+        run: ls -l
       - name: Copy docker-compose.yml to Server
         uses: appleboy/scp-action@master
         with:
@@ -34,7 +36,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.TRAINTRACK_SERVER_SSH_KEY }}
           source: "./docker-compose.yml"
-          target: "/"
+          target: "./"
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
         with:
@@ -45,4 +47,3 @@ jobs:
             docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin &&
             docker pull exvaldev/traintrackbackend:latest &&
             docker compose up -d
-
