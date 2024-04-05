@@ -3,6 +3,7 @@ import TrainingEntry from "@/models/TrainingEntry"; // Adjust the path as necess
 import { HTTP400Error, HTTP403Error, HTTP404Error } from "@/util/error"; // Adjust the path as necessary
 import logger from "@/config/winston";
 import Unit from "@/models/Unit";
+import { Role } from "@/types/Role";
 
 class TrainingEntryController {
   /**
@@ -187,7 +188,10 @@ class TrainingEntryController {
         throw new HTTP404Error("TrainingEntry not found");
       }
 
-      if (trainingEntry.userId !== req.body.user.id) {
+      if (
+        trainingEntry.userId !== req.body.user.id &&
+        req.body.user.role !== Role.ADMIN
+      ) {
         throw new HTTP403Error("You do not have access to this resource.");
       }
 
@@ -255,7 +259,10 @@ class TrainingEntryController {
       if (!trainingEntry) {
         throw new HTTP404Error("TrainingEntry not found");
       }
-      if (trainingEntry.userId !== req.body.user.id) {
+      if (
+        trainingEntry.userId !== req.body.user.id &&
+        req.body.user.role !== Role.ADMIN
+      ) {
         throw new HTTP403Error("You do not have access to this resource.");
       }
 
@@ -321,7 +328,10 @@ class TrainingEntryController {
       if (!trainingEntry) {
         throw new HTTP404Error("TrainingEntry not found");
       }
-      if (trainingEntry.userId !== req.body.user.id) {
+      if (
+        trainingEntry.userId !== req.body.user.id &&
+        req.body.user.role !== Role.ADMIN
+      ) {
         throw new HTTP403Error("You do not have access to this resource.");
       }
 

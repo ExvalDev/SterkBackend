@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import Session from "@/models/Session"; // Adjust the path as necessary
 import { HTTP400Error, HTTP403Error, HTTP404Error } from "@/util/error"; // Adjust the path as necessary
 import logger from "@/config/winston";
+import { Role } from "@/types/Role";
 
 class SessionController {
   /**
@@ -173,7 +174,10 @@ class SessionController {
       if (!session) {
         throw new HTTP404Error("Session not found");
       }
-      if (session.userId !== req.body.user.id) {
+      if (
+        session.userId !== req.body.user.id &&
+        req.body.user.role !== Role.ADMIN
+      ) {
         throw new HTTP403Error("You do not have access to this resource.");
       }
       logger.info(`Retrieved session: ${session.id}`);
@@ -226,7 +230,10 @@ class SessionController {
       if (!session) {
         throw new HTTP404Error("Session not found");
       }
-      if (session.userId !== req.body.user.id) {
+      if (
+        session.userId !== req.body.user.id &&
+        req.body.user.role !== Role.ADMIN
+      ) {
         throw new HTTP403Error("You do not have access to this resource.");
       }
       return await session
@@ -267,11 +274,12 @@ class SessionController {
   static async deleteSession(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
+      const user = req.body.user;
       const session = await Session.findByPk(id);
       if (!session) {
         throw new HTTP404Error("Session not found");
       }
-      if (session.userId !== req.body.user.id) {
+      if (session.userId !== user.id && user.role !== Role.ADMIN) {
         throw new HTTP403Error("You do not have access to this resource.");
       }
       await session.destroy();
