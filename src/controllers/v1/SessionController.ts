@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Session from "@/models/Session"; // Adjust the path as necessary
-import { HTTP400Error, HTTP404Error } from "@/util/error"; // Adjust the path as necessary
+import { HTTP400Error, HTTP403Error, HTTP404Error } from "@/util/error"; // Adjust the path as necessary
 import logger from "@/config/winston";
 
 class SessionController {
@@ -161,6 +161,8 @@ class SessionController {
    *           application/json:
    *             schema:
    *               $ref: '#/components/schemas/Session'
+   *       403:
+   *         description: You do not have access to this resource.
    *       404:
    *         description: Session not found
    */
@@ -170,6 +172,9 @@ class SessionController {
       const session = await Session.findByPk(id);
       if (!session) {
         throw new HTTP404Error("Session not found");
+      }
+      if (session.userId !== req.body.user.id) {
+        throw new HTTP403Error("You do not have access to this resource.");
       }
       logger.info(`Retrieved session: ${session.id}`);
       return res.json(session);
@@ -207,6 +212,8 @@ class SessionController {
    *     responses:
    *       200:
    *         description: Session updated successfully
+   *       403:
+   *         description: You do not have access to this resource.
    *       404:
    *         description: Session not found
    */
@@ -218,6 +225,9 @@ class SessionController {
       let session = await Session.findByPk(id);
       if (!session) {
         throw new HTTP404Error("Session not found");
+      }
+      if (session.userId !== req.body.user.id) {
+        throw new HTTP403Error("You do not have access to this resource.");
       }
       return await session
         .update({ sessionStart, sessionEnd })
@@ -249,6 +259,8 @@ class SessionController {
    *     responses:
    *       204:
    *         description: Session deleted successfully
+   *       403:
+   *         description: You do not have access to this resource.
    *       404:
    *         description: Session not found
    */
@@ -258,6 +270,9 @@ class SessionController {
       const session = await Session.findByPk(id);
       if (!session) {
         throw new HTTP404Error("Session not found");
+      }
+      if (session.userId !== req.body.user.id) {
+        throw new HTTP403Error("You do not have access to this resource.");
       }
       await session.destroy();
       logger.info(`Session deleted: ${id}`);

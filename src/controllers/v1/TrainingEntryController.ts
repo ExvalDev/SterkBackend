@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import TrainingEntry from "@/models/TrainingEntry"; // Adjust the path as necessary
-import { HTTP400Error, HTTP404Error } from "@/util/error"; // Adjust the path as necessary
+import { HTTP400Error, HTTP403Error, HTTP404Error } from "@/util/error"; // Adjust the path as necessary
 import logger from "@/config/winston";
 import Unit from "@/models/Unit";
 
@@ -23,14 +23,14 @@ class TrainingEntryController {
    *            required:
    *              - value
    *              - unitId
-   *              - machineCategoryId
+   *              - machineId
    *              - sessionId
    *            properties:
    *              value:
    *                type: number
    *              unitId:
    *                type: integer
-   *              machineCategoryId:
+   *              machineId:
    *                type: integer
    *              sessionId:
    *                type: integer
@@ -46,11 +46,11 @@ class TrainingEntryController {
     next: NextFunction
   ) {
     try {
-      const { value, unitId, machineCategoryId, sessionId } = req.body;
+      const { value, unitId, machineId, sessionId } = req.body;
       return await TrainingEntry.create({
         value,
         unitId,
-        machineCategoryId,
+        machineId,
         sessionId,
         userId: req.body.user.id,
       })
@@ -167,6 +167,8 @@ class TrainingEntryController {
    *           application/json:
    *             schema:
    *               $ref: '#/components/schemas/TrainingEntry'
+   *       403:
+   *         description: You do not have access to this resource.
    *       404:
    *         description: Training data not found
    */
@@ -181,10 +183,14 @@ class TrainingEntryController {
         include: [{ model: Unit }],
         attributes: { exclude: ["userId"] },
       });
-
       if (!trainingEntry) {
         throw new HTTP404Error("TrainingEntry not found");
       }
+
+      if (trainingEntry.userId !== req.body.user.id) {
+        throw new HTTP403Error("You do not have access to this resource.");
+      }
+
       logger.info(`Retrieved training data: ${trainingEntry.id}`);
       return res.json(trainingEntry);
     } catch (error) {
@@ -214,20 +220,22 @@ class TrainingEntryController {
    *            required:
    *              - value
    *              - unitId
-   *              - machineCategoryId
+   *              - machineId
    *              - sessionId
    *            properties:
    *              value:
    *                type: number
    *              unitId:
    *                type: integer
-   *              machineCategoryId:
+   *              machineId:
    *                type: integer
    *              sessionId:
    *                type: integer
    *     responses:
    *       200:
    *         description: Training Entry updated successfully
+   *       403:
+   *         description: You do not have access to this resource.
    *       404:
    *         description: Training Entry not found
    */
@@ -238,7 +246,7 @@ class TrainingEntryController {
   ) {
     try {
       const { id } = req.params;
-      const { value, unitId, machineCategoryId, sessionId } = req.body;
+      const { value, unitId, machineId, sessionId } = req.body;
 
       const trainingEntry = await TrainingEntry.findByPk(id, {
         include: [{ model: Unit }],
@@ -247,11 +255,13 @@ class TrainingEntryController {
       if (!trainingEntry) {
         throw new HTTP404Error("TrainingEntry not found");
       }
+      if (trainingEntry.userId !== req.body.user.id) {
+        throw new HTTP403Error("You do not have access to this resource.");
+      }
 
       trainingEntry.value = value ?? trainingEntry.value;
       trainingEntry.unitId = unitId ?? trainingEntry.unitId;
-      trainingEntry.machineCategoryId =
-        machineCategoryId ?? trainingEntry.machineCategoryId;
+      trainingEntry.machineId = machineId ?? trainingEntry.machineId;
       trainingEntry.sessionId = sessionId ?? trainingEntry.sessionId;
 
       return await trainingEntry
@@ -295,6 +305,8 @@ class TrainingEntryController {
    *     responses:
    *       204:
    *         description: Training Entry deleted successfully
+   *       403:
+   *         description: You do not have access to this resource.
    *       404:
    *         description: Training Entry not found
    */
@@ -308,6 +320,9 @@ class TrainingEntryController {
       const trainingEntry = await TrainingEntry.findByPk(id);
       if (!trainingEntry) {
         throw new HTTP404Error("TrainingEntry not found");
+      }
+      if (trainingEntry.userId !== req.body.user.id) {
+        throw new HTTP403Error("You do not have access to this resource.");
       }
 
       await trainingEntry.destroy();
