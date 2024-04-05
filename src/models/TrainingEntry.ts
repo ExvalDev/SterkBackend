@@ -7,10 +7,10 @@ import {
   ForeignKey,
 } from "sequelize";
 import { sequelize } from "../util/database";
-import MachineCategory from "./MachineCategory";
 import Unit from "./Unit";
 import Session from "./Session";
 import User from "./User";
+import Machine from "./Machine";
 
 /**
  * @swagger
@@ -21,7 +21,7 @@ import User from "./User";
  *       required:
  *         - value
  *         - unitId
- *         - machineCategoryId
+ *         - machineId
  *         - sessionId
  *       properties:
  *         id:
@@ -33,9 +33,9 @@ import User from "./User";
  *         unitId:
  *           type: number
  *           description: The id of the unit
- *         machineCategoryId:
+ *         machineId:
  *           type: number
- *           description: The id of the category the Training Entry belongs to
+ *           description: The id of the machine the Training Entry belongs to
  *         sessionId:
  *           type: number
  *           description: The id of the session the Training Entry belongs to
@@ -61,7 +61,7 @@ class TrainingEntry extends Model<
   declare id: CreationOptional<number>;
   declare value: string;
   declare unitId: ForeignKey<Unit["id"]>;
-  declare machineCategoryId: ForeignKey<MachineCategory["id"]>;
+  declare machineId: ForeignKey<Machine["id"]>;
   declare sessionId: ForeignKey<Session["id"]>;
   declare userId: ForeignKey<User["id"]>;
   declare createdAt: CreationOptional<Date>;
@@ -87,10 +87,10 @@ TrainingEntry.init(
       },
       allowNull: false,
     },
-    machineCategoryId: {
+    machineId: {
       type: DataTypes.INTEGER.UNSIGNED,
       references: {
-        model: MachineCategory,
+        model: Machine,
         key: "id",
       },
       allowNull: false,

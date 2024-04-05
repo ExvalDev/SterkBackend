@@ -1,4 +1,5 @@
 import logger from "@/config/winston";
+import MachineCategory from "@/models/MachineCategory";
 import Role from "@/models/Role";
 import Unit from "@/models/Unit";
 import { Role as Roles } from "@/types/Role";
@@ -61,9 +62,64 @@ const seedInitialUnits = async () => {
   }
 };
 
+const seedInitialMachineCategories = async () => {
+  const machineCategories = [
+    { name: "Bench Press Stations" },
+    { name: "Dumbbells" },
+    { name: "Cable Towers" },
+    { name: "Squat Racks" },
+    { name: "Leg Press Machines" },
+    { name: "Smith Machines" },
+    { name: "Pull-Up Bars" },
+    { name: "Kettlebells" },
+    { name: "Barbells" },
+    { name: "Lat Pulldown Machines" },
+    { name: "Leg Curl Machines" },
+    { name: "Chest Fly Machines" },
+    { name: "Shoulder Press Machines" },
+    { name: "Leg Extension Machines" },
+    { name: "Abdominal Crunch Machines" },
+    { name: "Hyperextension Benches" },
+    { name: "Preacher Curl Benches" },
+    { name: "Roman Chairs" },
+    { name: "Calf Machines" },
+    { name: "Plate-Loaded Machines" },
+    { name: "Functional Trainers" },
+    { name: "Medicine Balls" },
+    { name: "Plyo Boxes" },
+    { name: "Battle Ropes" },
+    { name: "Spin Bikes" },
+    { name: "Rowing Machines" },
+    { name: "Elliptical Trainers" },
+    { name: "Treadmills" },
+    { name: "Stair Climbers" },
+    { name: "Recumbent Bikes" },
+    { name: "Upright Bikes" },
+    { name: "Vibration Platforms" },
+    { name: "Suspension Trainers" },
+    { name: "Climbing Ropes" },
+    { name: "Gymnastic Rings" },
+    { name: "Sandbags" },
+    { name: "Resistance Bands" },
+    { name: "Foam Rollers" },
+  ];
+
+  // Check if any machine categories already exist to avoid re-seeding data
+  const count = await MachineCategory.count();
+  if (count === 0) {
+    // Use bulkCreate to insert initial machine categories if they don't already exist
+    await MachineCategory.bulkCreate(machineCategories);
+    logger.info("Units seeded successfully.");
+    ("Machine categories seeded successfully.");
+  } else {
+    logger.info("Machine categories already exist, skipping seeding.");
+  }
+};
+
 const seedData = async () => {
   seedInitialRoles();
   seedInitialUnits();
+  seedInitialMachineCategories();
 };
 
 export default seedData;
