@@ -13,6 +13,7 @@ services:
       DB_HOST: db
       DB_DRIVER: ${DB_DRIVER}
       PORT: ${PORT}
+      URL: ${URL}
     depends_on:
       - db
     networks:
