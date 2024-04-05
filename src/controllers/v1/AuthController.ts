@@ -33,8 +33,23 @@ class AuthController {
    *           schema:
    *             $ref: '#/components/schemas/User'
    *     responses:
-   *       201:
-   *         description: User registered successfully.
+   *       200:
+   *         description: User logged in successfully.
+   *         content:
+   *            application/json:
+   *              schema:
+   *                type: object
+   *                properties:
+   *                  message:
+   *                    type: string
+   *                  access_token:
+   *                    type: string
+   *                  access_token_expires:
+   *                    type: string
+   *                  refresh_token:
+   *                    type: string
+   *                  refresh_token_expires:
+   *                    type: string
    *       400:
    *         description: Bad request.
    */
@@ -59,10 +74,28 @@ class AuthController {
         language,
         roleId,
       })
-        .then((user) => {
+        .then(async (user) => {
           logger.info(`User registered: ${user.email}`);
-          const { password: _, ...userWithoutPassword } = user.toJSON();
-          return res.status(201).json(userWithoutPassword);
+          const sessionId = uuidv4();
+          const access_token = await generateAccessToken(user, sessionId);
+          const refresh_token = await generateRefreshToken(user, sessionId);
+
+          Token.create({
+            sessionId: sessionId,
+            access_token: await bcrypt.hash(access_token, 12),
+            refresh_token: await bcrypt.hash(refresh_token, 12),
+            userId: user.id,
+          });
+
+          return res
+            .status(HttpStatusCode.OK)
+            .json(
+              new TokenResponse(
+                "User logged in successfully",
+                access_token,
+                refresh_token
+              )
+            );
         })
         .catch((error) => {
           throw new HTTP400Error("BAD REQUEST", error);
@@ -95,6 +128,21 @@ class AuthController {
    *     responses:
    *       200:
    *         description: User logged in successfully.
+   *         content:
+   *            application/json:
+   *              schema:
+   *                type: object
+   *                properties:
+   *                  message:
+   *                    type: string
+   *                  access_token:
+   *                    type: string
+   *                  access_token_expires:
+   *                    type: string
+   *                  refresh_token:
+   *                    type: string
+   *                  refresh_token_expires:
+   *                    type: string
    *       400:
    *         description: Bad request.
    */
@@ -162,12 +210,17 @@ class AuthController {
    *             schema:
    *               type: object
    *               properties:
-   *                 accessToken:
-   *                   type: string
-   *                   description: The new access token.
-   *                 refreshToken:
-   *                   type: string
-   *                   description: The new refresh token (if rotating refresh tokens is enabled).
+   *                  message:
+   *                    type: string
+   *                  access_token:
+   *                    type: string
+   *                  access_token_expires:
+   *                    type: string
+   *                  refresh_token:
+   *                    type: string
+   *                  refresh_token_expires:
+   *                    type: string
+   *                    description: The new refresh token (if rotating refresh tokens is enabled).
    *       400:
    *         description: Bad request. Possible reasons include missing refresh token in the request body.
    *       401:
