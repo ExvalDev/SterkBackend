@@ -60,7 +60,7 @@ MachineCategory.init(
   },
   {
     modelName: "MachineCategory",
-    tableName: "machine_categories",
+    tableName: "machineCategories",
     timestamps: true,
     sequelize,
   }

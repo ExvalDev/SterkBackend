@@ -63,7 +63,7 @@ NFCTag.init(
   },
   {
     modelName: "NFCTag",
-    tableName: "nfc_tags",
+    tableName: "nfcTags",
     timestamps: true,
     sequelize,
   }

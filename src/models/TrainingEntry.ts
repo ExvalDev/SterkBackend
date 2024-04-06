@@ -116,7 +116,7 @@ TrainingEntry.init(
   },
   {
     modelName: "TrainingEntry",
-    tableName: "training_entries",
+    tableName: "trainingEntries",
     timestamps: true,
     sequelize,
   }

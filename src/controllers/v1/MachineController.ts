@@ -83,7 +83,7 @@ class MachineController {
         include: [
           {
             model: NFCTag,
-            as: "NFCTag",
+            as: "nfcTag",
           },
         ],
       });
@@ -124,7 +124,7 @@ class MachineController {
         include: [
           {
             model: NFCTag,
-            as: "NFCTag",
+            as: "nfcTag",
           },
         ],
       });

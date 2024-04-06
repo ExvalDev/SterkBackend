@@ -109,8 +109,7 @@ const seedInitialMachineCategories = async () => {
   if (count === 0) {
     // Use bulkCreate to insert initial machine categories if they don't already exist
     await MachineCategory.bulkCreate(machineCategories);
-    logger.info("Units seeded successfully.");
-    ("Machine categories seeded successfully.");
+    logger.info("Machine categories seeded successfully.");
   } else {
     logger.info("Machine categories already exist, skipping seeding.");
   }
