@@ -21,9 +21,9 @@ export const createAssociations = () => {
     ...options,
     foreignKey: "unitId",
   });
-  MachineCategory.hasMany(TrainingEntry, {
+  Machine.hasMany(TrainingEntry, {
     ...options,
-    foreignKey: "machineCategoryId",
+    foreignKey: "machineId",
   });
   Session.hasMany(TrainingEntry, {
     ...options,
@@ -36,6 +36,7 @@ export const createAssociations = () => {
   NFCTag.hasOne(Machine, {
     ...options,
     foreignKey: "nfcTagId",
+    as: "nfcTag",
   });
   Role.hasMany(User, {
     ...options,
@@ -63,11 +64,11 @@ export const createAssociations = () => {
   });
 
   TrainingEntry.belongsTo(Unit, { foreignKey: "unitId" });
-  TrainingEntry.belongsTo(MachineCategory, { foreignKey: "machineCategoryId" });
+  TrainingEntry.belongsTo(Machine, { foreignKey: "machineId" });
   TrainingEntry.belongsTo(Session, { foreignKey: "sessionId" });
   TrainingEntry.belongsTo(User, { foreignKey: "userId" });
   Machine.belongsTo(MachineCategory, { foreignKey: "machineCategoryId" });
-  Machine.belongsTo(NFCTag, { foreignKey: "nfcTagId" });
+  Machine.belongsTo(NFCTag, { foreignKey: "nfcTagId", as: "nfcTag" });
   Machine.belongsTo(Studio, { foreignKey: "studioId" });
   User.belongsTo(Role, { foreignKey: "roleId" });
   Session.belongsTo(User, { foreignKey: "userId" });

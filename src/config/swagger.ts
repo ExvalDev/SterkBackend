@@ -28,16 +28,16 @@ const options = {
     ],
     components: {
       securitySchemes: {
-        jwt: {
-          type: "apiKey",
-          in: "header",
-          name: "Authorization",
+        BearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
         },
       },
     },
     security: [
       {
-        jwt: [],
+        BearerAuth: [],
       },
     ],
   },

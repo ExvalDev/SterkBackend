@@ -26,6 +26,7 @@ class AuthController {
    *   post:
    *     summary: Register a new user
    *     tags: [Auth]
+   *     security: []
    *     requestBody:
    *       required: true
    *       content:
@@ -111,6 +112,7 @@ class AuthController {
    *   post:
    *     summary: Log in a user
    *     tags: [Auth]
+   *     security: []
    *     requestBody:
    *       required: true
    *       content:
@@ -193,6 +195,7 @@ class AuthController {
    *   post:
    *     summary: Refresh the access token
    *     tags: [Auth]
+   *     security: []
    *     description: This endpoint is used to refresh the access token using a valid refresh token. The refresh token should be sent in the request body.
    *     requestBody:
    *      required: true
@@ -284,8 +287,6 @@ class AuthController {
    *     summary: Log out a user
    *     tags: [Auth]
    *     description: This endpoint is used to log out a user by invalidating the current access token. The access token should be provided in the Authorization header.
-   *     security:
-   *       - bearerAuth: []
    *     responses:
    *       200:
    *         description: Successfully logged out. The session associated with the access token has been invalidated.
