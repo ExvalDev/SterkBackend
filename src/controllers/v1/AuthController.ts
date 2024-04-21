@@ -10,14 +10,20 @@ import {
   HTTP404Error,
   HTTP409Error,
 } from "@/utils/error"; // Adjust the path as necessary
-import { generateAccessToken, generateRefreshToken } from "@/utils/helpers";
+import {
+  generateAccessToken,
+  generatePasswordResetToken,
+  generateRefreshToken,
+} from "@/utils/helpers";
 import { HttpStatusCode } from "@/types/HttpStatusCode";
 import Token from "@/models/Token";
 import logger from "@/config/winston";
 import TokenResponse from "@/types/Token";
+import MailService from "@/services/mailService";
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
+const PASSWORD_RESET_SECRET = process.env.PASSWORD_RESET_SECRET;
 
 class AuthController {
   /**
@@ -77,6 +83,7 @@ class AuthController {
       })
         .then(async (user) => {
           logger.info(`User registered: ${user.email}`);
+          MailService.sendRegistrationMail(user);
           const sessionId = uuidv4();
           const access_token = await generateAccessToken(user, sessionId);
           const refresh_token = await generateRefreshToken(user, sessionId);
@@ -280,12 +287,14 @@ class AuthController {
       next(error);
     }
   }
+
   /**
    * @swagger
    * /api/auth/logout:
    *   get:
    *     summary: Log out a user
    *     tags: [Auth]
+   *     security: []
    *     description: This endpoint is used to log out a user by invalidating the current access token. The access token should be provided in the Authorization header.
    *     responses:
    *       200:
@@ -338,6 +347,140 @@ class AuthController {
       return res
         .status(HttpStatusCode.OK)
         .json({ message: "Successfully logged out" });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * @swagger
+   * /api/auth/forgotPassword:
+   *   post:
+   *     summary: Request a password reset
+   *     tags: [Auth]
+   *     security: []
+   *     description: This endpoint is used to request a password reset. The user will receive an email with a link to reset their password.
+   *     requestBody:
+   *      required: true
+   *      content:
+   *        application/json:
+   *        schema:
+   *          type: object
+   *          required:
+   *            - email
+   *     responses:
+   *       200:
+   *         description: Password reset link sent to email
+   *       400:
+   *         description: Bad request. Possible reasons include missing email in the request body.
+   *       404:
+   *         description: User not found. Indicates that the user with the provided email does not exist.
+   *       500:
+   *         description: Server error. Something went wrong on the server.
+   */
+  static async forgotPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { email } = req.body;
+      if (!email) {
+        throw new HTTP400Error("Email is required");
+      }
+
+      const user = await User.findOne({ where: { email } });
+      if (!user) {
+        throw new HTTP404Error("User not found");
+      }
+      const passwordResetToken = await generatePasswordResetToken(user);
+      user.update({
+        passwordResetToken: await bcrypt.hash(passwordResetToken, 12),
+      });
+      MailService.sendResetPasswordMail(user, passwordResetToken);
+      return res
+        .status(HttpStatusCode.OK)
+        .json({ message: "Password reset link sent to email" });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * @swagger
+   * /api/auth/resetPassword:
+   *   post:
+   *     summary: Reset a user's password
+   *     tags: [Auth]
+   *     security: []
+   *     description: This endpoint is used to reset a user's password. The user must provide a valid password reset token in the query string and a new password in the request body.
+   *     parameters:
+   *     - in: query
+   *       name: token
+   *     requestBody:
+   *       required: true
+   *       content:
+   *        application/json:
+   *          schema:
+   *            type: object
+   *            required:
+   *              - password
+   *            properties:
+   *              password:
+   *                type: string
+   *     responses:
+   *       200:
+   *         description: Password reset link sent to email
+   *       400:
+   *         description: Bad request. Possible reasons include missing password in the request body.
+   *       401:
+   *         description: Unauthorized. Indicates that the provided token is invalid or expired.
+   *       404:
+   *         description: User not found. Indicates that the user with the provided email does not exist.
+   *       500:
+   *         description: Server error. Something went wrong on the server.
+   */
+  static async resetPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { token } = req.query;
+      const { password } = req.body;
+
+      if (!token) {
+        throw new HTTP400Error("Token is required");
+      }
+      if (!password) {
+        throw new HTTP400Error("Password is required");
+      }
+
+      await jwt.verify(token, PASSWORD_RESET_SECRET, async (err, decoded) => {
+        if (err) {
+          throw new HTTP401Error("Unauthorized: Invalid token!");
+        }
+        const user = await User.findByPk(decoded.id);
+        if (!user) {
+          throw new HTTP404Error("Unauthorized: User not found");
+        }
+        // Check if any of the user's tokens match the provided token
+        const tokenIsValid = await bcrypt.compare(
+          token,
+          user.passwordResetToken || ""
+        );
+        if (!tokenIsValid) {
+          throw new HTTP401Error("Unauthorized: Token mismatch");
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 12);
+        await user
+          .update({
+            password: hashedPassword,
+          })
+          .then(async (user) => {
+            logger.info(`User password reset: ${user.email}`);
+            user.update({ passwordResetToken: null });
+            return res
+              .status(HttpStatusCode.OK)
+              .json({ message: "Password reset successful" });
+          })
+          .catch((error) => {
+            next(error);
+          });
+      });
     } catch (error) {
       next(error);
     }
