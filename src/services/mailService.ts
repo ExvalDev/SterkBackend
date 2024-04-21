@@ -12,7 +12,10 @@ class MailService {
     try {
       const filePath = path.join(
         __dirname,
-        "../utils/emails/templates",
+        "..",
+        "utils",
+        "emails",
+        "templates",
         "registrationMailTemplate.html"
       );
       const source = fs.readFileSync(filePath, "utf8");
@@ -39,7 +42,10 @@ class MailService {
     try {
       const filePath = path.join(
         __dirname,
-        "../utils/emails/templates",
+        "..",
+        "utils",
+        "emails",
+        "templates",
         "forgotPasswordMailTemplate.html"
       );
       const source = fs.readFileSync(filePath, "utf8");
