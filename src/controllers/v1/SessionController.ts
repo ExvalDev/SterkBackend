@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Session from "@/models/Session"; // Adjust the path as necessary
-import { HTTP400Error, HTTP403Error, HTTP404Error } from "@/util/error"; // Adjust the path as necessary
+import { HTTP400Error, HTTP403Error, HTTP404Error } from "@/utils/error"; // Adjust the path as necessary
 import logger from "@/config/winston";
 import { Role } from "@/types/Role";
 

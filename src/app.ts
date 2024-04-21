@@ -4,9 +4,9 @@ import bodyParser from "body-parser";
 import { createRoutes } from "./routes/routes";
 
 // Sequelize
-import { sequelize } from "@/util/database";
-import { createAssociations } from "@/util/associations";
-import seedData from "@/util/seed";
+import { sequelize } from "@/utils/database";
+import { createAssociations } from "@/utils/associations";
+import seedData from "@/utils/seed";
 
 // CORS
 import cors from "cors";

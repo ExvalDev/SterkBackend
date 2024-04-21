@@ -6,7 +6,7 @@ import {
   DataTypes,
   ForeignKey,
 } from "sequelize";
-import { sequelize } from "../util/database";
+import { sequelize } from "../utils/database";
 import Unit from "./Unit";
 import Session from "./Session";
 import User from "./User";
@@ -116,7 +116,7 @@ TrainingEntry.init(
   },
   {
     modelName: "TrainingEntry",
-    tableName: "training_entries",
+    tableName: "trainingEntries",
     timestamps: true,
     sequelize,
   }

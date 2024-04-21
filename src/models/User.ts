@@ -6,7 +6,7 @@ import {
   DataTypes,
   ForeignKey,
 } from "sequelize";
-import { sequelize } from "../util/database";
+import { sequelize } from "../utils/database";
 import type { Language } from "../types/Language";
 import Role from "./Role";
 
@@ -40,6 +40,9 @@ import Role from "./Role";
  *         roleId:
  *           type: integer
  *           description: The id of the role of the user
+ *         passwordResetToken:
+ *           type: string
+ *           description: The password reset token of the user
  *         createdAt:
  *           type: string
  *           format: date
@@ -55,6 +58,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare email: string;
   declare password: string;
   declare language: Language;
+  declare passwordResetToken: string;
   declare roleId: ForeignKey<Role["id"]>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
@@ -81,6 +85,9 @@ User.init(
     language: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    passwordResetToken: {
+      type: DataTypes.STRING,
     },
     roleId: {
       type: DataTypes.INTEGER.UNSIGNED,

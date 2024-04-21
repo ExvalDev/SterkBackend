@@ -5,7 +5,7 @@ import {
   CreationOptional,
   DataTypes,
 } from "sequelize";
-import { sequelize } from "../util/database";
+import { sequelize } from "../utils/database";
 
 /**
  * @swagger
@@ -60,7 +60,7 @@ MachineCategory.init(
   },
   {
     modelName: "MachineCategory",
-    tableName: "machine_categories",
+    tableName: "machineCategories",
     timestamps: true,
     sequelize,
   }

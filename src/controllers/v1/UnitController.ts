@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Unit from "@/models/Unit"; // Adjust the path as necessary
-import { HTTP400Error, HTTP404Error, HTTP409Error } from "@/util/error"; // Adjust the path as necessary
+import { HTTP400Error, HTTP404Error, HTTP409Error } from "@/utils/error"; // Adjust the path as necessary
 import { Op, ValidationError } from "sequelize";
 import logger from "@/config/winston";
 

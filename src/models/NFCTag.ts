@@ -6,7 +6,7 @@ import {
   DataTypes,
   ForeignKey,
 } from "sequelize";
-import { sequelize } from "../util/database";
+import { sequelize } from "../utils/database";
 import Studio from "./Studio";
 
 /**
@@ -63,7 +63,7 @@ NFCTag.init(
   },
   {
     modelName: "NFCTag",
-    tableName: "nfc_tags",
+    tableName: "nfcTags",
     timestamps: true,
     sequelize,
   }
