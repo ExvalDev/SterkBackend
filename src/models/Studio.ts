@@ -5,7 +5,7 @@ import {
   CreationOptional,
   DataTypes,
 } from "sequelize";
-import { sequelize } from "../util/database";
+import { sequelize } from "../utils/database";
 
 /**
  * @swagger

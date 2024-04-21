@@ -9,8 +9,8 @@ import {
   HTTP403Error,
   HTTP404Error,
   HTTP409Error,
-} from "@/util/error"; // Adjust the path as necessary
-import { generateAccessToken, generateRefreshToken } from "@/util/helpers";
+} from "@/utils/error"; // Adjust the path as necessary
+import { generateAccessToken, generateRefreshToken } from "@/utils/helpers";
 import { HttpStatusCode } from "@/types/HttpStatusCode";
 import Token from "@/models/Token";
 import logger from "@/config/winston";

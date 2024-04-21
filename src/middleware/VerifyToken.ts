@@ -2,7 +2,7 @@ import User from "@/models/User";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { HTTP401Error } from "@/util/error";
+import { HTTP401Error } from "@/utils/error";
 import Token from "@/models/Token";
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;

@@ -1,6 +1,6 @@
 import e, { Request, Response, NextFunction } from "express";
 import User from "@/models/User"; // Adjust the path as necessary
-import { HTTP404Error, HTTP400Error, HTTP409Error } from "@/util/error"; // Adjust the path as necessary
+import { HTTP404Error, HTTP400Error, HTTP409Error } from "@/utils/error"; // Adjust the path as necessary
 import bcrypt from "bcrypt";
 import logger from "@/config/winston";
 import { ValidationError } from "sequelize";

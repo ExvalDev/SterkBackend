@@ -1,5 +1,5 @@
 import { Role } from "@/types/Role";
-import { HTTP403Error } from "@/util/error";
+import { HTTP403Error } from "@/utils/error";
 
 const CheckRole = (roles: Role[]) => (req, res, next) => {
   if (!req.body.user) {

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import MachineCategory from "@/models/MachineCategory"; // Adjust the path as necessary
-import { HTTP400Error, HTTP404Error } from "@/util/error"; // Adjust the path as necessary
+import { HTTP400Error, HTTP404Error } from "@/utils/error"; // Adjust the path as necessary
 import logger from "@/config/winston";
 import { log } from "winston";
 

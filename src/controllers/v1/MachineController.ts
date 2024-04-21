@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Machine from "@/models/Machine"; // Adjust the path as necessary
-import { HTTP400Error, HTTP404Error } from "@/util/error"; // Adjust the path as necessary
+import { HTTP400Error, HTTP404Error } from "@/utils/error"; // Adjust the path as necessary
 import logger from "@/config/winston";
 import NFCTag from "@/models/NFCTag";
 
