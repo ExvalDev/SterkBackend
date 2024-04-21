@@ -5,4 +5,3 @@ logs
 .DS_store
 package-lock.json
 migrations
-config
