@@ -6,7 +6,13 @@ const router = express.Router();
 
 router.get("/", (req: Request, res: Response, next: NextFunction) => {
   try {
-    const filePath = path.join(__dirname, "..", "pages", "index.html");
+    const filePath = path.join(
+      __dirname,
+      "..",
+      "static",
+      "pages",
+      "index.html"
+    );
     return res.status(HttpStatusCode.OK).sendFile(filePath);
   } catch (error) {
     next(error);

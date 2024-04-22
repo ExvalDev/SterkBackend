@@ -1,11 +1,11 @@
 {
   "name": "traintrackbackend",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "index.js",
   "scripts": {
     "build": "tsc && tsc-alias && npm run copy-static",
-    "copy-static": "ncp src/pages dist/pages && ncp public dist/public",
+    "copy-static": "ncp src/static dist/static",
     "start": "node ./dist/app.js",
     "dev": "nodemon",
     "test": "test"
