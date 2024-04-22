@@ -6,6 +6,7 @@ import Handlebars from "handlebars";
 import path from "path";
 
 const SENDER = process.env.MAIL_USER;
+const URL = process.env.URL;
 
 class MailService {
   static async sendRegistrationMail(user: User) {
@@ -52,7 +53,7 @@ class MailService {
       const template = Handlebars.compile(source);
       const replacements = {
         userName: user.name,
-        resetLink: token,
+        resetLink: URL + "/resetPassword?token=" + token,
       };
       const htmlToSend = template(replacements);
       await transporter.sendMail({

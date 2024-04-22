@@ -19,4 +19,22 @@ router.get("/", (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
+router.get(
+  "/resetPassword",
+  (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const filePath = path.join(
+        __dirname,
+        "..",
+        "static",
+        "pages",
+        "resetPassword.html"
+      );
+      return res.status(HttpStatusCode.OK).sendFile(filePath);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 export { router as pageRoutes };
