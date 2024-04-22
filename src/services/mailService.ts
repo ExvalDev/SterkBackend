@@ -13,7 +13,7 @@ class MailService {
       const filePath = path.join(
         __dirname,
         "..",
-        "utils",
+        "static",
         "emails",
         "templates",
         "registrationMailTemplate.html"
@@ -43,7 +43,7 @@ class MailService {
       const filePath = path.join(
         __dirname,
         "..",
-        "utils",
+        "static",
         "emails",
         "templates",
         "forgotPasswordMailTemplate.html"
