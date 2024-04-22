@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import { createRoutes } from "./routes/routes";
 
 // Sequelize
-import { sequelize } from "@/utils/database";
+import { sequelize } from "@/config/sequelize";
 import { createAssociations } from "@/utils/associations";
 import seedData from "@/utils/seed";
 

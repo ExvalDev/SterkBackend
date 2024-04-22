@@ -2,16 +2,13 @@ version: '3.8'
 services:
   app:
     container_name: trainTrackBackend
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
     build: .
     ports:
       - "8000:8000"
-    environment:
-      NODE_ENV: production
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: db
-      DB_DRIVER: ${DB_DRIVER}
     depends_on:
       - db
     networks:
@@ -22,13 +19,10 @@ services:
   db:
     container_name: trainTrackDB
     image: mysql:8.0
+    env_file:
+      - .env
     command: --default-authentication-plugin=caching_sha2_password
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3306:3306"
     volumes:

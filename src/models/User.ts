@@ -6,7 +6,7 @@ import {
   DataTypes,
   ForeignKey,
 } from "sequelize";
-import { sequelize } from "../utils/database";
+import { sequelize } from "../config/sequelize";
 import type { Language } from "../types/Language";
 import Role from "./Role";
 

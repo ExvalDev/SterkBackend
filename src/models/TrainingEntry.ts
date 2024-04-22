@@ -6,7 +6,7 @@ import {
   DataTypes,
   ForeignKey,
 } from "sequelize";
-import { sequelize } from "../utils/database";
+import { sequelize } from "../config/sequelize";
 import Unit from "./Unit";
 import Session from "./Session";
 import User from "./User";

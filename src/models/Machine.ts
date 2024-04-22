@@ -6,7 +6,7 @@ import {
   DataTypes,
   ForeignKey,
 } from "sequelize";
-import { sequelize } from "../utils/database";
+import { sequelize } from "../config/sequelize";
 import NFCTag from "./NFCTag";
 import Studio from "./Studio";
 import MachineCategory from "./MachineCategory";
