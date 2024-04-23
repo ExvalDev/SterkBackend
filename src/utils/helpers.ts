@@ -15,7 +15,12 @@ export const generateAccessToken = async (user: User, sessionId: string) => {
   const roleName = role ? role.name : "User";
 
   const access_token = jwt.sign(
-    { id: user.id, role: roleName, session: sessionId },
+    {
+      id: user.id,
+      role: roleName,
+      session: sessionId,
+      language: user.language,
+    },
     ACCESS_TOKEN_SECRET,
     {
       expiresIn: ACCESS_TOKEN_LIFE,

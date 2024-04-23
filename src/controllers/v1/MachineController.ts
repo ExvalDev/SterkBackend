@@ -129,7 +129,7 @@ class MachineController {
         ],
       });
       if (!machine) {
-        throw new HTTP404Error("Machine not found");
+        throw new HTTP404Error("machineNotFound");
       }
       logger.info(`Retrieved machine: ${machine.name}`);
       return res.json(machine);
@@ -184,7 +184,7 @@ class MachineController {
 
       let machine = await Machine.findByPk(id);
       if (!machine) {
-        throw new HTTP404Error("Machine not found");
+        throw new HTTP404Error("machineNotFound");
       }
 
       return await machine
@@ -230,7 +230,7 @@ class MachineController {
       const { id } = req.params;
       const machine = await Machine.findByPk(id);
       if (!machine) {
-        throw new HTTP404Error("Machine not found");
+        throw new HTTP404Error("machineNotFound");
       }
       await machine.destroy();
       logger.info(`Deleted machine: ${machine.name}`);

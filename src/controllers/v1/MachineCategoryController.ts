@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import MachineCategory from "@/models/MachineCategory"; // Adjust the path as necessary
 import { HTTP400Error, HTTP404Error } from "@/utils/error"; // Adjust the path as necessary
 import logger from "@/config/winston";
-import { log } from "winston";
 
 class MachineCategoryController {
   /**
@@ -113,7 +112,7 @@ class MachineCategoryController {
       const { id } = req.params;
       const category = await MachineCategory.findByPk(id);
       if (!category) {
-        throw new HTTP404Error("Machine category not found");
+        throw new HTTP404Error("machineCategoryNotFound");
       }
       logger.info(`Retrieved machine category: ${category.name}`);
       return res.json(category);
@@ -163,7 +162,7 @@ class MachineCategoryController {
 
       let category = await MachineCategory.findByPk(id);
       if (!category) {
-        throw new HTTP404Error("Machine category not found");
+        throw new HTTP404Error("machineCategoryNotFound");
       }
 
       return await category
@@ -208,7 +207,7 @@ class MachineCategoryController {
       const { id } = req.params;
       const category = await MachineCategory.findByPk(id);
       if (!category) {
-        throw new HTTP404Error("Machine category not found");
+        throw new HTTP404Error("machineCategoryNotFound");
       }
 
       await category.destroy();

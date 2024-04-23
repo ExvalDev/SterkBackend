@@ -67,11 +67,11 @@ class AuthController {
       // Check if user already exists
       const userExists = await User.findOne({ where: { email } });
       if (userExists) {
-        throw new HTTP409Error("Email already in use");
+        throw new HTTP409Error("emailAlreadyInUse");
       }
 
       if (!password) {
-        throw new HTTP400Error("Password is required");
+        throw new HTTP400Error("passwordIsRequired");
       }
       const hashedPassword = await bcrypt.hash(password, 12);
       return await User.create({
@@ -99,7 +99,7 @@ class AuthController {
             .status(HttpStatusCode.OK)
             .json(
               new TokenResponse(
-                "User logged in successfully",
+                req.t("userLoggedInSuccessfully", { lng: user.language }),
                 access_token,
                 refresh_token
               )
@@ -163,12 +163,12 @@ class AuthController {
       }
       const user = await User.findOne({ where: { email } });
       if (!user) {
-        throw new HTTP404Error("Authentication failed. User not found.");
+        throw new HTTP404Error("authenticationFailedUserNotFound");
       }
 
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
-        throw new HTTP401Error("Authentication failed. Wrong password.");
+        throw new HTTP401Error("authenticationFailedWrongPassword");
       }
 
       const sessionId = uuidv4();
@@ -186,7 +186,7 @@ class AuthController {
         .status(HttpStatusCode.OK)
         .json(
           new TokenResponse(
-            "User logged in successfully",
+            req.t("userLoggedInSuccessfully", { lng: user.language }),
             access_token,
             refresh_token
           )
@@ -242,18 +242,18 @@ class AuthController {
     try {
       const { refresh_token } = req.body;
       if (!refresh_token) {
-        throw new HTTP400Error("Refresh token required");
+        throw new HTTP400Error("refreshTokenRequired");
       }
 
       // Verify refresh token
       jwt.verify(refresh_token, REFRESH_TOKEN_SECRET, async (err, decoded) => {
         if (err) {
-          return next(new HTTP403Error("Invalid refresh token"));
+          return next(new HTTP403Error("invalidRefreshToken"));
         }
 
         const user = await User.findByPk(decoded.id);
         if (!user) {
-          return next(new HTTP404Error("User not found"));
+          return next(new HTTP404Error("userNotFound"));
         }
 
         const sessionId = decoded.session;
@@ -264,9 +264,7 @@ class AuthController {
           },
         });
         if (!token) {
-          return next(
-            new HTTP404Error("No Token found for this user and session.")
-          );
+          return next(new HTTP404Error("noTokenFoundForThisUserAndSession"));
         }
 
         const newAccessToken = await generateAccessToken(user, sessionId);
@@ -277,7 +275,9 @@ class AuthController {
 
         res.json(
           new TokenResponse(
-            `Token refreshed for user: ${user.id}`,
+            `${req.t("tokenRefreshedForUser", { lng: user.language })}: ${
+              user.id
+            }`,
             newAccessToken,
             newRefreshToken
           )
@@ -318,14 +318,14 @@ class AuthController {
     try {
       const authHeader = req.headers.authorization;
       if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        throw new HTTP401Error("Unauthorized: No access token provided");
+        throw new HTTP401Error("noAccessTokenProvid");
       }
       const accessToken = authHeader.split(" ")[1];
 
       // Verify the access token to extract the sessionId or userId
       jwt.verify(accessToken, ACCESS_TOKEN_SECRET, async (err, decoded) => {
         if (err) {
-          throw new HTTP401Error("Unauthorized: Invalid token!");
+          throw new HTTP401Error("invalidToken");
         }
 
         try {
@@ -336,17 +336,21 @@ class AuthController {
             },
           });
           if (!token) {
-            throw new HTTP404Error("Session not found");
+            throw new HTTP404Error("sessionNotFound");
           }
-
           await token.destroy();
+
+          const user = await User.findByPk(decoded.id);
+          if (!user) {
+            return next(new HTTP404Error("userNotFound"));
+          }
+          return res
+            .status(HttpStatusCode.OK)
+            .json({ message: req.t("loggedOut", { lng: user.language }) });
         } catch (error) {
           next(error);
         }
       });
-      return res
-        .status(HttpStatusCode.OK)
-        .json({ message: "Successfully logged out" });
     } catch (error) {
       next(error);
     }
@@ -382,12 +386,12 @@ class AuthController {
     try {
       const { email } = req.body;
       if (!email) {
-        throw new HTTP400Error("Email is required");
+        throw new HTTP400Error("emailIsRequired");
       }
 
       const user = await User.findOne({ where: { email } });
       if (!user) {
-        throw new HTTP404Error("User not found");
+        throw new HTTP404Error("userNotFound");
       }
       const passwordResetToken = await generatePasswordResetToken(user);
       user.update({
@@ -396,7 +400,7 @@ class AuthController {
       MailService.sendResetPasswordMail(user, passwordResetToken);
       return res
         .status(HttpStatusCode.OK)
-        .json({ message: "Password reset link sent to email" });
+        .json({ message: req.t("resetLinkSent", { lng: user.language }) });
     } catch (error) {
       next(error);
     }
@@ -442,19 +446,19 @@ class AuthController {
       const { password } = req.body;
 
       if (!token) {
-        throw new HTTP400Error("Token is required");
+        throw new HTTP400Error("tokenIsRequired");
       }
       if (!password) {
-        throw new HTTP400Error("Password is required");
+        throw new HTTP400Error("passwordIsRequired");
       }
 
       await jwt.verify(token, PASSWORD_RESET_SECRET, async (err, decoded) => {
         if (err) {
-          throw new HTTP401Error("Unauthorized: Invalid token!");
+          throw new HTTP401Error("invalidToken");
         }
         const user = await User.findByPk(decoded.id);
         if (!user) {
-          throw new HTTP404Error("Unauthorized: User not found");
+          throw new HTTP404Error("userNotFound");
         }
         // Check if any of the user's tokens match the provided token
         const tokenIsValid = await bcrypt.compare(
@@ -462,7 +466,7 @@ class AuthController {
           user.passwordResetToken || ""
         );
         if (!tokenIsValid) {
-          throw new HTTP401Error("Unauthorized: Token mismatch");
+          throw new HTTP401Error("tokenMismatch");
         }
 
         const hashedPassword = await bcrypt.hash(password, 12);
@@ -475,7 +479,11 @@ class AuthController {
             user.update({ passwordResetToken: null });
             return res
               .status(HttpStatusCode.OK)
-              .json({ message: "Password reset successful" });
+              .json({
+                message: req.t("passwordResetSuccessfully", {
+                  lng: user.language,
+                }),
+              });
           })
           .catch((error) => {
             next(error);

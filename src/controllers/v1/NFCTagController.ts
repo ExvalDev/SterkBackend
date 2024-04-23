@@ -103,7 +103,7 @@ class NFCTagController {
       const { id } = req.params;
       const nfctag = await NFCTag.findByPk(id);
       if (!nfctag) {
-        throw new HTTP404Error("NFC tag not found");
+        throw new HTTP404Error("nfcTagNotFound");
       }
       logger.info(`Retrieved NFC tag: ${nfctag.nfcId}`);
       return res.json(nfctag);
@@ -151,7 +151,7 @@ class NFCTagController {
       const { nfcId } = req.body;
       const nfctag = await NFCTag.findByPk(id);
       if (!nfctag) {
-        throw new HTTP404Error("NFC tag not found");
+        throw new HTTP404Error("nfcTagNotFound");
       }
       nfctag.nfcId = nfcId;
       return nfctag
@@ -196,7 +196,7 @@ class NFCTagController {
       const { id } = req.params;
       const nfctag = await NFCTag.findByPk(id);
       if (!nfctag) {
-        throw new HTTP404Error("NFC-Tag not found");
+        throw new HTTP404Error("nfcTagNotFound");
       }
       await nfctag.destroy();
       logger.info(`Deleted NFC-Tag: ${nfctag.nfcId}`);

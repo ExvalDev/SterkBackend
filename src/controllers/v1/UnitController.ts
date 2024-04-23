@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import Unit from "@/models/Unit"; // Adjust the path as necessary
 import { HTTP400Error, HTTP404Error, HTTP409Error } from "@/utils/error"; // Adjust the path as necessary
-import { Op, ValidationError } from "sequelize";
+import { Op } from "sequelize";
 import logger from "@/config/winston";
 
 class UnitController {
@@ -37,15 +37,13 @@ class UnitController {
     try {
       const { name } = req.body;
       if (!name) {
-        throw new HTTP400Error("The name field is required.");
+        throw new HTTP400Error("theNameFieldIsRequired");
       }
 
       // Check if the unit already exists
       const existingUnit = await Unit.findOne({ where: { name } });
       if (existingUnit) {
-        throw new HTTP409Error(
-          `A unit with the name '${name}' already exists.`
-        );
+        throw new HTTP409Error("aUnitWithThisNameAlreadyExists");
       }
 
       return await Unit.create({ name })
@@ -121,7 +119,7 @@ class UnitController {
       const { id } = req.params;
       const unit = await Unit.findByPk(id);
       if (!unit) {
-        throw new HTTP404Error("Unit not found");
+        throw new HTTP404Error("unitNotFound");
       }
       logger.info(`Retrieved unit: ${unit.name}`);
       return res.json(unit);
@@ -165,7 +163,7 @@ class UnitController {
       const { id } = req.params;
       const { name } = req.body;
       if (!name) {
-        throw new HTTP400Error("The name field is required.");
+        throw new HTTP400Error("theNameFieldIsRequired");
       }
 
       // Check if another unit with the new name already exists (excluding the current unit)
@@ -176,14 +174,12 @@ class UnitController {
         },
       });
       if (existingUnit) {
-        throw new HTTP409Error(
-          `Another unit with the name '${name}' already exists.`
-        );
+        throw new HTTP409Error("aUnitWithThisNameAlreadyExists");
       }
 
       const unit = await Unit.findByPk(id);
       if (!unit) {
-        throw new HTTP404Error("Unit not found");
+        throw new HTTP404Error("unitNotFound");
       }
 
       unit.name = name;
@@ -232,7 +228,7 @@ class UnitController {
       const { id } = req.params;
       const unit = await Unit.findByPk(id);
       if (!unit) {
-        throw new HTTP404Error("Unit not found");
+        throw new HTTP404Error("unitNotFound");
       }
       await unit.destroy();
       logger.info(`Deleted unit: ${unit.name}`);

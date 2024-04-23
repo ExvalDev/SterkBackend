@@ -172,13 +172,13 @@ class SessionController {
       const { id } = req.params;
       const session = await Session.findByPk(id);
       if (!session) {
-        throw new HTTP404Error("Session not found");
+        throw new HTTP404Error("sessionNotFound");
       }
       if (
         session.userId !== req.body.user.id &&
         req.body.user.role !== Role.ADMIN
       ) {
-        throw new HTTP403Error("You do not have access to this resource.");
+        throw new HTTP403Error("youDoNotHaveAccessToThisResource");
       }
       logger.info(`Retrieved session: ${session.id}`);
       return res.json(session);
@@ -228,13 +228,13 @@ class SessionController {
 
       let session = await Session.findByPk(id);
       if (!session) {
-        throw new HTTP404Error("Session not found");
+        throw new HTTP404Error("sessionNotFoun");
       }
       if (
         session.userId !== req.body.user.id &&
         req.body.user.role !== Role.ADMIN
       ) {
-        throw new HTTP403Error("You do not have access to this resource.");
+        throw new HTTP403Error("youDoNotHaveAccessToThisResource");
       }
       return await session
         .update({ sessionStart, sessionEnd })
@@ -277,10 +277,10 @@ class SessionController {
       const user = req.body.user;
       const session = await Session.findByPk(id);
       if (!session) {
-        throw new HTTP404Error("Session not found");
+        throw new HTTP404Error("sessionNotFoun");
       }
       if (session.userId !== user.id && user.role !== Role.ADMIN) {
-        throw new HTTP403Error("You do not have access to this resource.");
+        throw new HTTP403Error("youDoNotHaveAccessToThisResource");
       }
       await session.destroy();
       logger.info(`Session deleted: ${id}`);

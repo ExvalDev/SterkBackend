@@ -185,14 +185,14 @@ class TrainingEntryController {
         attributes: { exclude: ["userId"] },
       });
       if (!trainingEntry) {
-        throw new HTTP404Error("TrainingEntry not found");
+        throw new HTTP404Error("trainingEntryNotFound");
       }
 
       if (
         trainingEntry.userId !== req.body.user.id &&
         req.body.user.role !== Role.ADMIN
       ) {
-        throw new HTTP403Error("You do not have access to this resource.");
+        throw new HTTP403Error("youDoNotHaveAccessToThisResource");
       }
 
       logger.info(`Retrieved training data: ${trainingEntry.id}`);
@@ -257,13 +257,13 @@ class TrainingEntryController {
         attributes: { exclude: ["userId"] },
       });
       if (!trainingEntry) {
-        throw new HTTP404Error("TrainingEntry not found");
+        throw new HTTP404Error("trainingEntryNotFound");
       }
       if (
         trainingEntry.userId !== req.body.user.id &&
         req.body.user.role !== Role.ADMIN
       ) {
-        throw new HTTP403Error("You do not have access to this resource.");
+        throw new HTTP403Error("youDoNotHaveAccessToThisResource");
       }
 
       trainingEntry.value = value ?? trainingEntry.value;
@@ -326,13 +326,13 @@ class TrainingEntryController {
       const { id } = req.params;
       const trainingEntry = await TrainingEntry.findByPk(id);
       if (!trainingEntry) {
-        throw new HTTP404Error("TrainingEntry not found");
+        throw new HTTP404Error("trainingEntryNotFound");
       }
       if (
         trainingEntry.userId !== req.body.user.id &&
         req.body.user.role !== Role.ADMIN
       ) {
-        throw new HTTP403Error("You do not have access to this resource.");
+        throw new HTTP403Error("youDoNotHaveAccessToThisResource");
       }
 
       await trainingEntry.destroy();
