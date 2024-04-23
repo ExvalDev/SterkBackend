@@ -1,6 +1,6 @@
 {
   "name": "traintrackbackend",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-status-monitor": "^1.3.4",
     "handlebars": "^4.7.8",
     "i18next": "^23.11.2",
     "i18next-fs-backend": "^2.3.1",

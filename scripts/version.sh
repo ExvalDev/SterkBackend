@@ -1,3 +1,4 @@
+echo "Current version:" $(grep -o '"version": "[0-9]*\.[0-9]*\.[0-9]*' package.json | grep -o '[0-9]*\.[0-9]*\.[0-9]*')
 echo "Enter the new version:"
 read version
 

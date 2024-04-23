@@ -15,6 +15,7 @@ import { v1Routes } from "./v1/v1Routes";
 import setLanguage from "@/middleware/SetLanguage";
 import middleware from "i18next-http-middleware";
 import i18next from "@/config/i18n";
+import monitor from "@/config/monitor";
 
 export const createRoutes = (app: Express) => {
   // STATIC
@@ -26,7 +27,11 @@ export const createRoutes = (app: Express) => {
   // SWAGGER
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(config));
 
+  // MONITORING
+  app.use(monitor);
+
   app.use(middleware.handle(i18next));
+
   // AUTH
   app.use("/api/auth", authRoutes);
 
