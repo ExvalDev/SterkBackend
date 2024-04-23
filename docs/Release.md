@@ -8,6 +8,8 @@ This document outlines the steps required to make a release in our project. The 
 
 - Update the `version` attribute in the `package.json` file located in the root directory of the `develop` branch.
 - Also update the version number displayed on the index page of the application located in /src/static/pages/index.html to reflect the new release version.
+- Run the script to update the version:
+  `. scripts/version.sh`
 
 ### Step 2: Push Changes to GitHub
 
