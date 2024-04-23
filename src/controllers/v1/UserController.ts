@@ -56,7 +56,7 @@ class UserController {
       // Check if user already exists
       const userExists = await User.findOne({ where: { email } });
       if (userExists) {
-        throw new HTTP409Error("Email already in use. Please Login!");
+        throw new HTTP409Error("emailAlreadyInUse");
       }
 
       const hashedPassword = await bcrypt.hash(password, 12);
@@ -136,7 +136,7 @@ class UserController {
       const { id } = req.params;
       const user = await User.findByPk(id);
       if (!user) {
-        throw new HTTP404Error("User not found");
+        throw new HTTP404Error("userNotFound");
       }
       logger.info(`Retrieved user: ${user.email}`);
       const { password: _, ...userWithoutPassword } = user.toJSON();
@@ -200,7 +200,7 @@ class UserController {
 
       let user = await User.findByPk(id);
       if (!user) {
-        throw new HTTP404Error("User not found");
+        throw new HTTP404Error("userNotFound");
       }
 
       return await user
@@ -242,7 +242,7 @@ class UserController {
       const { id } = req.params;
       const user = await User.findByPk(id);
       if (!user) {
-        throw new HTTP404Error("User not found");
+        throw new HTTP404Error("userNotFound");
       }
 
       await user.destroy();

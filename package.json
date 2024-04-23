@@ -1,6 +1,6 @@
 {
   "name": "traintrackbackend",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -18,6 +18,9 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "handlebars": "^4.7.8",
+    "i18next": "^23.11.2",
+    "i18next-fs-backend": "^2.3.1",
+    "i18next-http-middleware": "^3.5.0",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.9.2",
     "nodemailer": "^6.9.13",

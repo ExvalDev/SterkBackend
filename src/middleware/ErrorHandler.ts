@@ -11,14 +11,16 @@ const ErrorHandler = (
 ) => {
   logger.error(
     error.validationErrors
-      ? `${error.message} [${error.validationErrors.join(", ")}]`
-      : error.message
+      ? `${req.t(error.message, { lng: "en" })} [${error.validationErrors.join(
+          ", "
+        )}]`
+      : req.t(error.message, { lng: "en" })
   );
 
   const response = {
     name: error.name,
     httpCode: error.httpCode || 500,
-    message: error.message,
+    message: req.t(error.message),
   };
 
   if (error.validationErrors) {

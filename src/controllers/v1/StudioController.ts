@@ -41,7 +41,7 @@ class StudioController {
   static async createStudio(req: Request, res: Response, next: NextFunction) {
     try {
       const { name, street, houseNumber, city, zip } = req.body;
-      return await Studio.create({ name })
+      return await Studio.create({ name, street, houseNumber, city, zip })
         .then((studio) => {
           logger.info(`Studio created: ${studio.name}`);
           return res.status(201).json(studio);
@@ -108,7 +108,7 @@ class StudioController {
       const { id } = req.params;
       const studio = await Studio.findByPk(id);
       if (!studio) {
-        throw new HTTP404Error("Studio not found");
+        throw new HTTP404Error("studioNotFound");
       }
       logger.info(`Retrieved studio: ${studio.name}`);
       return res.json(studio);
@@ -162,7 +162,7 @@ class StudioController {
 
       let studio = await Studio.findByPk(id);
       if (!studio) {
-        throw new HTTP404Error("Studio not found");
+        throw new HTTP404Error("studioNotFound");
       }
 
       return await studio
@@ -203,7 +203,7 @@ class StudioController {
       const { id } = req.params;
       const studio = await Studio.findByPk(id);
       if (!studio) {
-        throw new HTTP404Error("Studio not found");
+        throw new HTTP404Error("studioNotFound");
       }
 
       await studio.destroy();
