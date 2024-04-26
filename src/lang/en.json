@@ -25,5 +25,7 @@
   "loggedOut": "Successfully logged out.",
   "resetLinkSent": "Password reset link sent to email.",
   "tokenMismatch": "Unauthorized: Token mismatch.",
-  "passwordResetSuccessfully": "Password reset successfully."
+  "passwordResetSuccessfully": "Password reset successfully.",
+  "maxMachinesReached": "Max machines reached. Please upgrade your plan.",
+  "licenceNotFound": "Licence not found."
 }

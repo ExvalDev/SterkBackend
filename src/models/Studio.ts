@@ -4,8 +4,10 @@ import {
   InferCreationAttributes,
   CreationOptional,
   DataTypes,
+  ForeignKey,
 } from "sequelize";
 import { sequelize } from "../config/sequelize";
+import Licence from "./Licence";
 
 /**
  * @swagger
@@ -53,6 +55,8 @@ class Studio extends Model<
   declare houseNumber: string;
   declare city: string;
   declare zip: string;
+  declare licenceId: ForeignKey<Licence["id"]>;
+  declare Licence?: Licence;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
@@ -80,6 +84,14 @@ Studio.init(
     },
     zip: {
       type: DataTypes.STRING,
+    },
+    licenceId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      references: {
+        model: Licence,
+        key: "id",
+      },
+      allowNull: false,
     },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,

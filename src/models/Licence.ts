@@ -4,78 +4,73 @@ import {
   InferCreationAttributes,
   CreationOptional,
   DataTypes,
-  ForeignKey,
 } from "sequelize";
 import { sequelize } from "../config/sequelize";
-import Studio from "./Studio";
 
 /**
  * @swagger
  * components:
  *   schemas:
- *     NFCTag:
+ *     Licence:
  *       type: object
  *       required:
- *         - nfcId
+ *         - name
  *       properties:
  *         id:
  *           type: number
- *           description: The auto-generated id of the category
- *         nfcId:
+ *           description: The auto-generated id of the licence
+ *         name:
  *           type: string
- *           description: The NFCId of the NFC-Tag
- *         studioId:
- *           type: number
- *           description: The id of the studio
+ *           description: The name of the role
  *         createdAt:
  *           type: string
  *           format: date
- *           description: The auto-generated creation date of the safing
+ *           description: The auto-generated creation date of the licence
  *         updatedAt:
  *           type: string
  *           format: date
- *           description: The auto-generated last update of the safing
+ *           description: The auto-generated last update of the licence
  */
-class NFCTag extends Model<
-  InferAttributes<NFCTag>,
-  InferCreationAttributes<NFCTag>
+class Licence extends Model<
+  InferAttributes<Licence>,
+  InferCreationAttributes<Licence>
 > {
   declare id: CreationOptional<number>;
-  declare nfcId: string;
-  declare studioId: ForeignKey<Studio["id"]>;
+  declare name: string;
+  declare maxMachines: number;
+  declare price: number;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }
 
-NFCTag.init(
+Licence.init(
   {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
     },
-    nfcId: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
     },
-    studioId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      references: {
-        model: Studio,
-        key: "id",
-      },
+    maxMachines: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    price: {
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
     },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   },
   {
-    modelName: "NFCTag",
-    tableName: "nfcTags",
+    modelName: "Licence",
+    tableName: "licences",
     timestamps: true,
     sequelize,
   }
 );
 
-export default NFCTag;
+export default Licence;

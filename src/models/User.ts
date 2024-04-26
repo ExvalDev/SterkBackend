@@ -9,6 +9,7 @@ import {
 import { sequelize } from "../config/sequelize";
 import type { Language } from "../types/Language";
 import Role from "./Role";
+import Studio from "./Studio";
 
 /**
  * @swagger
@@ -60,6 +61,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare language: Language;
   declare passwordResetToken: string;
   declare roleId: ForeignKey<Role["id"]>;
+  declare Studios?: Studio[];
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 }

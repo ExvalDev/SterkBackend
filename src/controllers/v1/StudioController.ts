@@ -32,6 +32,8 @@ class StudioController {
    *                type: string
    *              zip:
    *                type: string
+   *              licenceId:
+   *                type: integer
    *     responses:
    *       201:
    *         description: Studio created successfully.
@@ -40,8 +42,15 @@ class StudioController {
    */
   static async createStudio(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name, street, houseNumber, city, zip } = req.body;
-      return await Studio.create({ name, street, houseNumber, city, zip })
+      const { name, street, houseNumber, city, zip, licenceId } = req.body;
+      return await Studio.create({
+        name,
+        street,
+        houseNumber,
+        city,
+        zip,
+        licenceId,
+      })
         .then((studio) => {
           logger.info(`Studio created: ${studio.name}`);
           return res.status(201).json(studio);
@@ -158,7 +167,7 @@ class StudioController {
   static async updateStudio(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const { name, street, houseNumber, city, zip } = req.body;
+      const { name, street, houseNumber, city, zip, licenceId } = req.body;
 
       let studio = await Studio.findByPk(id);
       if (!studio) {
@@ -166,7 +175,7 @@ class StudioController {
       }
 
       return await studio
-        .update({ name, street, houseNumber, city, zip })
+        .update({ name, street, houseNumber, city, zip, licenceId })
         .then((studio) => {
           logger.info(`Updated studio: ${studio.name}`);
           return res.json(studio);
