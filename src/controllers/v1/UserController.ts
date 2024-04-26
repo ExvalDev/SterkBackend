@@ -1,9 +1,10 @@
-import e, { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import User from "@/models/User"; // Adjust the path as necessary
 import { HTTP404Error, HTTP400Error, HTTP409Error } from "@/utils/error"; // Adjust the path as necessary
 import bcrypt from "bcrypt";
 import logger from "@/config/winston";
-import { ValidationError } from "sequelize";
+import Studio from "@/models/Studio";
+import { HttpStatusCode } from "@/types/HttpStatusCode";
 
 class UserController {
   /**
@@ -43,6 +44,9 @@ class UserController {
    *              roleId:
    *                type: number
    *                description: The role ID of the user
+   *              studioId:
+   *                type: number
+   *                descriptio: The studio ID of the user
    *     responses:
    *       201:
    *         description: User created successfully.
@@ -51,7 +55,7 @@ class UserController {
    */
   static async createUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name, email, password, language, roleId } = req.body;
+      const { name, email, password, language, roleId, studioId } = req.body;
 
       // Check if user already exists
       const userExists = await User.findOne({ where: { email } });
@@ -60,17 +64,29 @@ class UserController {
       }
 
       const hashedPassword = await bcrypt.hash(password, 12);
-      return await User.create({
+      await User.create({
         name,
         email,
         password: hashedPassword,
         language,
         roleId,
       })
-        .then((user) => {
+        .then(async (user) => {
           logger.info(`User created: ${user.email}`);
+          await Studio.findByPk(studioId)
+            .then(async (studio) => {
+              if (!studio) {
+                logger.error("Studio not found");
+              } else {
+                // @ts-ignore
+                await user.addStudio(studio);
+              }
+            })
+            .catch((error) => {
+              logger.error(error.message);
+            });
           const { password: _, ...userWithoutPassword } = user.toJSON();
-          return res.status(201).json(userWithoutPassword);
+          return res.status(HttpStatusCode.CREATED).json(userWithoutPassword);
         })
         .catch((error) => {
           throw new HTTP400Error("BAD REQUEST", error);

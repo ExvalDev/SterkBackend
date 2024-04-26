@@ -10,6 +10,7 @@ import Role from "@/models/Role";
 import Token from "@/models/Token";
 import logger from "@/config/winston";
 import Studio from "@/models/Studio";
+import Licence from "@/models/Licence";
 
 const options = {
   constraints: true,
@@ -62,6 +63,10 @@ export const createAssociations = () => {
     ...options,
     foreignKey: "studioId",
   });
+  Licence.hasMany(Studio, {
+    ...options,
+    foreignKey: "licenceId",
+  });
 
   TrainingEntry.belongsTo(Unit, { foreignKey: "unitId" });
   TrainingEntry.belongsTo(Machine, { foreignKey: "machineId" });
@@ -74,8 +79,15 @@ export const createAssociations = () => {
   Session.belongsTo(User, { foreignKey: "userId" });
   Token.belongsTo(User, { foreignKey: "userId" });
   NFCTag.belongsTo(Studio, { foreignKey: "studioId" });
-  User.belongsToMany(Studio, { through: "user_studio" });
-  Studio.belongsToMany(User, { through: "user_studio" });
+  User.belongsToMany(Studio, {
+    foreignKey: "userId",
+    through: "user_studio",
+  });
+  Studio.belongsToMany(User, {
+    foreignKey: "studioId",
+    through: "user_studio",
+  });
+  Studio.belongsTo(Licence, { foreignKey: "licenceId" });
 
   logger.info("Associations created successfully");
 };

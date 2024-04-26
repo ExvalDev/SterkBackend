@@ -13,6 +13,11 @@ router.get(
   NFCTagController.getAllNFCTags
 );
 router.get(
+  path + "/studios",
+  CheckRole([Role.STUDIO_OWNER]),
+  NFCTagController.getAllNFCTagsByStudio
+);
+router.get(
   path + "/:id",
   CheckRole([Role.ADMIN, Role.STUDIO_OWNER, Role.USER]),
   NFCTagController.getNFCTagById

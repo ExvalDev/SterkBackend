@@ -2,6 +2,11 @@ import { Request, Response, NextFunction } from "express";
 import NFCTag from "@/models/NFCTag"; // Adjust the path as necessary
 import { HTTP400Error, HTTP404Error } from "@/utils/error"; // Adjust the path as necessary
 import logger from "@/config/winston";
+import Studio from "@/models/Studio";
+import Licence from "@/models/Licence";
+import { HttpStatusCode } from "@/types/HttpStatusCode";
+import User from "@/models/User";
+import { Op } from "sequelize";
 
 class NFCTagController {
   /**
@@ -36,10 +41,33 @@ class NFCTagController {
   static async createNFCTag(req: Request, res: Response, next: NextFunction) {
     try {
       const { nfcId, studioId } = req.body;
-      return await NFCTag.create({ nfcId, studioId })
+      // Fetch the studio and include the associated License
+      const studio = await Studio.findOne({
+        where: { id: studioId },
+        include: [{ model: Licence }],
+      });
+
+      if (!studio) {
+        throw new HTTP400Error("studioNotFound");
+      }
+      if (!studio.Licence) {
+        throw new HTTP400Error("licenceNotFound");
+      }
+
+      // Count NFC tags already created for the studio
+      const countNfcTags = await NFCTag.count({
+        where: { studioId: studio.id },
+      });
+
+      if (countNfcTags >= studio.Licence.maxMachines) {
+        throw new HTTP400Error("maxMachinesReached");
+      }
+
+      // Create the NFC tag
+      await NFCTag.create({ nfcId, studioId })
         .then((nfcTag) => {
           logger.info(`NFC tag created: ${nfcTag.nfcId}`);
-          return res.status(201).json(nfcTag);
+          return res.status(HttpStatusCode.CREATED).json(nfcTag);
         })
         .catch((error) => {
           throw new HTTP400Error("Bad Request", error);
@@ -69,7 +97,49 @@ class NFCTagController {
     try {
       const nfctags = await NFCTag.findAll();
       logger.info(`Retrieved ${nfctags.length} NFC tags`);
-      return res.json(nfctags);
+      return res.status(HttpStatusCode.OK).json(nfctags);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  /**
+   * @swagger
+   * /api/v1/nfctags/studios:
+   *   get:
+   *     summary: Get all NFC tags by studios
+   *     tags: [NFCTag]
+   *     responses:
+   *       200:
+   *         description: A list of NFC tags associated with the studios the user is responsible for.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 $ref: '#/components/schemas/NFCTag'
+   */
+  static async getAllNFCTagsByStudio(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const userId = req.body.user.id;
+      await User.findByPk(userId, {
+        include: [{ model: Studio }],
+      }).then(async (user) => {
+        const studioIds = user.Studios.map((studio) => studio.id);
+        await NFCTag.findAll({
+          where: {
+            studioId: {
+              [Op.or]: studioIds,
+            },
+          },
+        }).then((nfcTags) => {
+          return res.status(HttpStatusCode.OK).json(nfcTags);
+        });
+      });
     } catch (error) {
       next(error);
     }
@@ -106,7 +176,7 @@ class NFCTagController {
         throw new HTTP404Error("nfcTagNotFound");
       }
       logger.info(`Retrieved NFC tag: ${nfctag.nfcId}`);
-      return res.json(nfctag);
+      return res.status(HttpStatusCode.OK).json(nfctag);
     } catch (error) {
       next(error);
     }
@@ -154,7 +224,7 @@ class NFCTagController {
         throw new HTTP404Error("nfcTagNotFound");
       }
       nfctag.nfcId = nfcId;
-      return nfctag
+      await nfctag
         .save()
         .then((nfcTag) => {
           logger.info(`Updated NFC tag: ${nfctag.nfcId}`);
@@ -200,7 +270,7 @@ class NFCTagController {
       }
       await nfctag.destroy();
       logger.info(`Deleted NFC-Tag: ${nfctag.nfcId}`);
-      return res.status(204).send();
+      return res.status(HttpStatusCode.NO_CONTENT).send();
     } catch (error) {
       next(error);
     }

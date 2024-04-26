@@ -1,10 +1,12 @@
 import logger from "@/config/winston";
+import Licence from "@/models/Licence";
 import MachineCategory from "@/models/MachineCategory";
 import Role from "@/models/Role";
 import Unit from "@/models/Unit";
+import { Licence as Licences } from "@/types/Licence";
 import { Role as Roles } from "@/types/Role";
 
-const seedInitialRoles = async () => {
+const seedRoles = async () => {
   // Define your roles
   const roles = Object.values(Roles).map((role) => ({ name: role }));
 
@@ -16,6 +18,30 @@ const seedInitialRoles = async () => {
     logger.info("Roles seeded successfully.");
   } else {
     logger.info("Roles already exist, skipping seeding.");
+  }
+};
+
+const seedLicences = async () => {
+  const maxMachines = [20, 50, 2000];
+  const prices = [50, 100, 300];
+  const licences = Object.values(Licences).map((licence) => ({
+    name: licence,
+  }));
+
+  // Check if any licences already exist to avoid re-seeding data
+  const count = await Licence.count();
+  if (count === 0) {
+    // Use bulkCreate to insert initial licences if they don't already exist
+    licences.forEach((licence, index) => {
+      Licence.create({
+        name: licence.name,
+        maxMachines: maxMachines[index],
+        price: prices[index],
+      });
+    });
+    logger.info("Licences seeded successfully.");
+  } else {
+    logger.info("Licences already exist, skipping seeding.");
   }
 };
 
@@ -116,7 +142,8 @@ const seedInitialMachineCategories = async () => {
 };
 
 const seedData = async () => {
-  seedInitialRoles();
+  seedRoles();
+  seedLicences();
   seedInitialUnits();
   seedInitialMachineCategories();
 };

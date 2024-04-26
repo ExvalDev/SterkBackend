@@ -25,5 +25,7 @@
   "loggedOut": "Erfolgreich abgemeldet.",
   "resetLinkSent": "Link zum Zurücksetzen des Passworts wurde per E-Mail gesendet.",
   "tokenMismatch": "Unautorisiert: Token stimmt nicht überein.",
-  "passwordResetSuccessfully": "Passwort erfolgreich zurückgesetzt."
+  "passwordResetSuccessfully": "Passwort erfolgreich zurückgesetzt.",
+  "maxMachinesReached": "Maximale Anzahl von Maschinen erreicht. Bitte stufen Sie Ihr Abonnement auf.",
+  "licenceNotFound": "Lizenz nicht gefunden."
 }
