@@ -27,9 +27,9 @@ class MailService {
       };
       const htmlToSend = template(replacements);
       await transporter.sendMail({
-        from: `"TrainTrack" <${SENDER}>`,
+        from: `"Sterk" <${SENDER}>`,
         to: user.email,
-        subject: "Thank you for registering with TrainTrack",
+        subject: "Thank you for registering with Sterk",
         html: htmlToSend,
       });
 
@@ -57,7 +57,7 @@ class MailService {
       };
       const htmlToSend = template(replacements);
       await transporter.sendMail({
-        from: `"TrainTrack" <${SENDER}>`,
+        from: `"Sterk" <${SENDER}>`,
         to: user.email,
         subject: "Reset Password",
         html: htmlToSend,

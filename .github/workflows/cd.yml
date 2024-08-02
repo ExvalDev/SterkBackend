@@ -21,7 +21,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: exvaldev/traintrackbackend:latest
+          tags: exvaldev/sterkbackend:latest
 
   deploy:
     needs: build-and-push
@@ -33,16 +33,16 @@ jobs:
         with:
           host: 212.132.118.127
           username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.TRAINTRACK_SERVER_SSH_KEY }}
+          key: ${{ secrets.STERK_SERVER_SSH_KEY }}
           source: "./docker-compose.prod.yml"
-          target: "./trainTrackBackend"
+          target: "./sterkBackend"
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
         with:
           host: 212.132.118.127
           username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.TRAINTRACK_SERVER_SSH_KEY }}
+          key: ${{ secrets.STERK_SERVER_SSH_KEY }}
           script: echo ${{ secrets.DOCKER_PASSWORD }} |
             docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin &&
-            docker pull exvaldev/traintrackbackend:latest &&
-            docker compose -f trainTrackBackend/docker-compose.prod.yml up -d
+            docker pull exvaldev/sterkbackend:latest &&
+            docker compose -f sterkBackend/docker-compose.prod.yml up -d

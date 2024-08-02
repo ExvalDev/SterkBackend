@@ -1,1767 +1,1528 @@
 {
-	"info": {
-		"_postman_id": "515ec158-5171-422a-8df8-a19363a6e68b",
-		"name": "TrainTrack",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33900146"
-	},
-	"item": [
-		{
-			"name": "Authentication",
-			"item": [
-				{
-					"name": "Login",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseData = pm.response.json();",
-									"",
-									"// Check if the response contains access_token and refresh_token",
-									"if(responseData.access_token && responseData.refresh_token) {",
-									"    // Set the access_token and refresh_token as collection variables",
-									"    pm.collectionVariables.set(\"ACCESS_TOKEN\", responseData.access_token);",
-									"    pm.collectionVariables.set(\"REFRESH_TOKEN\", responseData.refresh_token);",
-									"    ",
-									"    console.log(\"Tokens saved to collection variables.\");",
-									"} else {",
-									"    console.log(\"Tokens not found in the response.\");",
-									"}"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"\",\n    \"password\": \"\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}/api/auth/login",
-							"host": [
-								"{{protocol}}{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Register",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseData = pm.response.json();",
-									"",
-									"// Check if the response contains access_token and refresh_token",
-									"if(responseData.access_token && responseData.refresh_token) {",
-									"    // Set the access_token and refresh_token as collection variables",
-									"    pm.collectionVariables.set(\"ACCESS_TOKEN\", responseData.access_token);",
-									"    pm.collectionVariables.set(\"REFRESH_TOKEN\", responseData.refresh_token);",
-									"    ",
-									"    console.log(\"Tokens saved to collection variables.\");",
-									"} else {",
-									"    console.log(\"Tokens not found in the response.\");",
-									"}"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"\",\n    \"email\": \"\",\n    \"password\": \"\",\n    \"language\": \"de\",\n    \"roleId\": 1\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}/api/auth/register",
-							"host": [
-								"{{protocol}}{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Refresh",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseData = pm.response.json();",
-									"",
-									"// Check if the response contains access_token and refresh_token",
-									"if(responseData.access_token && responseData.refresh_token) {",
-									"    // Set the access_token and refresh_token as collection variables",
-									"    pm.collectionVariables.set(\"ACCESS_TOKEN\", responseData.access_token);",
-									"    pm.collectionVariables.set(\"REFRESH_TOKEN\", responseData.refresh_token);",
-									"    ",
-									"    console.log(\"Tokens saved to collection variables.\");",
-									"} else {",
-									"    console.log(\"Tokens not found in the response.\");",
-									"}"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"refresh_token\": \"{{REFRESH_TOKEN}}\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}/api/auth/refresh",
-							"host": [
-								"{{protocol}}{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"refresh"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Forgot Password",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseData = pm.response.json();",
-									"",
-									"// Check if the response contains access_token and refresh_token",
-									"if(responseData.access_token && responseData.refresh_token) {",
-									"    // Set the access_token and refresh_token as collection variables",
-									"    pm.collectionVariables.set(\"ACCESS_TOKEN\", responseData.access_token);",
-									"    pm.collectionVariables.set(\"REFRESH_TOKEN\", responseData.refresh_token);",
-									"    ",
-									"    console.log(\"Tokens saved to collection variables.\");",
-									"} else {",
-									"    console.log(\"Tokens not found in the response.\");",
-									"}"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}/api/auth/forgotPassword",
-							"host": [
-								"{{protocol}}{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"forgotPassword"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Reset Password",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseData = pm.response.json();",
-									"",
-									"// Check if the response contains access_token and refresh_token",
-									"if(responseData.access_token && responseData.refresh_token) {",
-									"    // Set the access_token and refresh_token as collection variables",
-									"    pm.collectionVariables.set(\"ACCESS_TOKEN\", responseData.access_token);",
-									"    pm.collectionVariables.set(\"REFRESH_TOKEN\", responseData.refresh_token);",
-									"    ",
-									"    console.log(\"Tokens saved to collection variables.\");",
-									"} else {",
-									"    console.log(\"Tokens not found in the response.\");",
-									"}"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"password\": \"\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}/api/auth/resetPassword?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzEzNzE2Mjc2LCJleHAiOjE3MTM3MTcxNzZ9.fAkvSKc5Rvz6kKJ9Ki09H2l3QUHsPkKMKoELVxBf_e8",
-							"host": [
-								"{{protocol}}{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"resetPassword"
-							],
-							"query": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzEzNzE2Mjc2LCJleHAiOjE3MTM3MTcxNzZ9.fAkvSKc5Rvz6kKJ9Ki09H2l3QUHsPkKMKoELVxBf_e8"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Logout",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}/api/auth/logout",
-							"host": [
-								"{{protocol}}{{baseUrl}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"logout"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Users",
-			"item": [
-				{
-					"name": "CREATE User",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"// Parse the response body as JSON",
-									"var responseData = pm.response.json();",
-									"",
-									"// Check if the response contains access_token and refresh_token",
-									"if(responseData.access_token && responseData.refresh_token) {",
-									"    // Set the access_token and refresh_token as collection variables",
-									"    pm.collectionVariables.set(\"ACCESS_TOKEN\", responseData.access_token);",
-									"    pm.collectionVariables.set(\"REFRESH_TOKEN\", responseData.refresh_token);",
-									"    ",
-									"    console.log(\"Tokens saved to collection variables.\");",
-									"} else {",
-									"    console.log(\"Tokens not found in the response.\");",
-									"}"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"\",\n    \"email\": \"\",\n    \"password\": \"\",\n    \"language\": \"de\",\n    \"roleId\": 2,\n    \"studioId\": 1\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/users",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"users"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET User by Id",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/users/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"users",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET Users",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/users",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"users"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "UPDATE User",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"\",\n    \"email\": \"\",\n    \"password\": \"\",\n    \"language\": \"de\",\n    \"roleId\": 3\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/users/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"users",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "DELETE User by Id",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/users/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"users",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "6"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Units",
-			"item": [
-				{
-					"name": "CREATE Unit",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/units",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"units"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET Unit by Id",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/units/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"units",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "28"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET Units",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/units",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"units"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "UPDATE Unit",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Test\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/units/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"units",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "29"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "DELETE Unit by Id",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/units/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"units",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "NFC Tags",
-			"item": [
-				{
-					"name": "CREATE NFC Tag",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nfcId\": \"weiofhewoifho\",\n    \"studioId\": 1\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/nfctags",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"nfctags"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET NFC-Tag by Id",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/nfctags/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"nfctags",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET NFC-Tags",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/nfctags",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"nfctags"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET NFC-Tags by Studio",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/nfctags/studios",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"nfctags",
-								"studios"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "UPDATE NFC-Tag",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"nfcId\": \"evnerwivione\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/nfctags/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"nfctags",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "DELETE NFC-Tag by Id",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/nfctags/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"nfctags",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Studios",
-			"item": [
-				{
-					"name": "CREATE Studio",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Studio 1\",\n    \"licenceId\": 1\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/studios",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"studios"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET Studio by Id",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/studios/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"studios",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET Studios",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/studios",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"studios"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "UPDATE Studio",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Studio 2\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/studios/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"studios",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "2"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "DELETE Studio by Id",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/studios/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"studios",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "3"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Training Entries",
-			"item": [
-				{
-					"name": "CREATE Training Entry",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"value\": \"Test\",\n    \"unitId\": 1,\n    \"machineId\": 1,\n    \"sessionId\": 1\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/trainingEntries",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"trainingEntries"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET Training Entry by Id",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/trainingEntries/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"trainingEntries",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "2"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET Training Entry by User",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/trainingEntries/user",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"trainingEntries",
-								"user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET Training Entries",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/trainingEntries",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"trainingEntries"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "UPDATE Training Entry",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/trainingEntries/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"trainingEntries",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "DELETE Training Entry by Id",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/trainingEntries/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"trainingEntries",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Sessions",
-			"item": [
-				{
-					"name": "CREATE Session",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"sessionStart\": \"2024-03-29 11:36:12\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/sessions",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"sessions"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET Session by Id",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/sessions/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"sessions",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET Session by User",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/sessions/user",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"sessions",
-								"user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET Session",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/sessions",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"sessions"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "UPDATE Session",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"sessionStart\": \"2024-03-29 11:56:12\",\n    \"sessionEnd\": \"2024-03-29 11:56:12\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/sessions/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"sessions",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "DELETE Session by Id",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/sessions/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"sessions",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Machine Categories",
-			"item": [
-				{
-					"name": "CREATE Machine Category",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Bench Press\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/machinecategories",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"machinecategories"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET Machine Category by Id",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/machinecategories/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"machinecategories",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET Machine Categories",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/machinecategories",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"machinecategories"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "UPDATE Machine Category",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Bench Press\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/machinecategories/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"machinecategories",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "DELETE Machine Category by Id",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/machinecategories/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"machinecategories",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Machines",
-			"item": [
-				{
-					"name": "CREATE Machine",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Bench Press #1\",\n    \"machineCategoryId\": 1,\n    \"nfcTagId\": 1,\n    \"studioId\": 1\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/machines",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"machines"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET Machine by Id",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/machines/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"machines",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET Machines",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/machines",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"machines"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "UPDATE Machines",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Bench Press #1\",\n    \"machineCategoryId\": 1,\n    \"nfcTagId\": 1,\n    \"studioId\": 1\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/machines/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"machines",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "DELETE Machine by Id",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Kg\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{protocol}}{{baseUrl}}{{version}}/machines/:id",
-							"host": [
-								"{{protocol}}{{baseUrl}}{{version}}"
-							],
-							"path": [
-								"machines",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		}
-	],
-	"auth": {
-		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{ACCESS_TOKEN}}",
-				"type": "string"
-			}
-		]
-	},
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
-		{
-			"key": "baseUrl",
-			"value": "localhost:8000",
-			"type": "string"
-		},
-		{
-			"key": "protocol",
-			"value": "http://",
-			"type": "string"
-		},
-		{
-			"key": "version",
-			"value": "/api/v1",
-			"type": "string"
-		},
-		{
-			"key": "ACCESS_TOKEN",
-			"value": "",
-			"type": "string"
-		},
-		{
-			"key": "REFRESH_TOKEN",
-			"value": "",
-			"type": "string"
-		}
-	]
+  "info": {
+    "_postman_id": "515ec158-5171-422a-8df8-a19363a6e68b",
+    "name": "Sterk",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "33900146"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Parse the response body as JSON",
+                  "var responseData = pm.response.json();",
+                  "",
+                  "// Check if the response contains access_token and refresh_token",
+                  "if(responseData.access_token && responseData.refresh_token) {",
+                  "    // Set the access_token and refresh_token as collection variables",
+                  "    pm.collectionVariables.set(\"ACCESS_TOKEN\", responseData.access_token);",
+                  "    pm.collectionVariables.set(\"REFRESH_TOKEN\", responseData.refresh_token);",
+                  "    ",
+                  "    console.log(\"Tokens saved to collection variables.\");",
+                  "} else {",
+                  "    console.log(\"Tokens not found in the response.\");",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"\",\n    \"password\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}/api/auth/login",
+              "host": ["{{protocol}}{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Parse the response body as JSON",
+                  "var responseData = pm.response.json();",
+                  "",
+                  "// Check if the response contains access_token and refresh_token",
+                  "if(responseData.access_token && responseData.refresh_token) {",
+                  "    // Set the access_token and refresh_token as collection variables",
+                  "    pm.collectionVariables.set(\"ACCESS_TOKEN\", responseData.access_token);",
+                  "    pm.collectionVariables.set(\"REFRESH_TOKEN\", responseData.refresh_token);",
+                  "    ",
+                  "    console.log(\"Tokens saved to collection variables.\");",
+                  "} else {",
+                  "    console.log(\"Tokens not found in the response.\");",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"\",\n    \"email\": \"\",\n    \"password\": \"\",\n    \"language\": \"de\",\n    \"roleId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}/api/auth/register",
+              "host": ["{{protocol}}{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Parse the response body as JSON",
+                  "var responseData = pm.response.json();",
+                  "",
+                  "// Check if the response contains access_token and refresh_token",
+                  "if(responseData.access_token && responseData.refresh_token) {",
+                  "    // Set the access_token and refresh_token as collection variables",
+                  "    pm.collectionVariables.set(\"ACCESS_TOKEN\", responseData.access_token);",
+                  "    pm.collectionVariables.set(\"REFRESH_TOKEN\", responseData.refresh_token);",
+                  "    ",
+                  "    console.log(\"Tokens saved to collection variables.\");",
+                  "} else {",
+                  "    console.log(\"Tokens not found in the response.\");",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refresh_token\": \"{{REFRESH_TOKEN}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}/api/auth/refresh",
+              "host": ["{{protocol}}{{baseUrl}}"],
+              "path": ["api", "auth", "refresh"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Parse the response body as JSON",
+                  "var responseData = pm.response.json();",
+                  "",
+                  "// Check if the response contains access_token and refresh_token",
+                  "if(responseData.access_token && responseData.refresh_token) {",
+                  "    // Set the access_token and refresh_token as collection variables",
+                  "    pm.collectionVariables.set(\"ACCESS_TOKEN\", responseData.access_token);",
+                  "    pm.collectionVariables.set(\"REFRESH_TOKEN\", responseData.refresh_token);",
+                  "    ",
+                  "    console.log(\"Tokens saved to collection variables.\");",
+                  "} else {",
+                  "    console.log(\"Tokens not found in the response.\");",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}/api/auth/forgotPassword",
+              "host": ["{{protocol}}{{baseUrl}}"],
+              "path": ["api", "auth", "forgotPassword"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Parse the response body as JSON",
+                  "var responseData = pm.response.json();",
+                  "",
+                  "// Check if the response contains access_token and refresh_token",
+                  "if(responseData.access_token && responseData.refresh_token) {",
+                  "    // Set the access_token and refresh_token as collection variables",
+                  "    pm.collectionVariables.set(\"ACCESS_TOKEN\", responseData.access_token);",
+                  "    pm.collectionVariables.set(\"REFRESH_TOKEN\", responseData.refresh_token);",
+                  "    ",
+                  "    console.log(\"Tokens saved to collection variables.\");",
+                  "} else {",
+                  "    console.log(\"Tokens not found in the response.\");",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"password\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}/api/auth/resetPassword?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzEzNzE2Mjc2LCJleHAiOjE3MTM3MTcxNzZ9.fAkvSKc5Rvz6kKJ9Ki09H2l3QUHsPkKMKoELVxBf_e8",
+              "host": ["{{protocol}}{{baseUrl}}"],
+              "path": ["api", "auth", "resetPassword"],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzEzNzE2Mjc2LCJleHAiOjE3MTM3MTcxNzZ9.fAkvSKc5Rvz6kKJ9Ki09H2l3QUHsPkKMKoELVxBf_e8"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}/api/auth/logout",
+              "host": ["{{protocol}}{{baseUrl}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "CREATE User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Parse the response body as JSON",
+                  "var responseData = pm.response.json();",
+                  "",
+                  "// Check if the response contains access_token and refresh_token",
+                  "if(responseData.access_token && responseData.refresh_token) {",
+                  "    // Set the access_token and refresh_token as collection variables",
+                  "    pm.collectionVariables.set(\"ACCESS_TOKEN\", responseData.access_token);",
+                  "    pm.collectionVariables.set(\"REFRESH_TOKEN\", responseData.refresh_token);",
+                  "    ",
+                  "    console.log(\"Tokens saved to collection variables.\");",
+                  "} else {",
+                  "    console.log(\"Tokens not found in the response.\");",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"\",\n    \"email\": \"\",\n    \"password\": \"\",\n    \"language\": \"de\",\n    \"roleId\": 2,\n    \"studioId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/users",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["users"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET User by Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/users/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Users",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/users",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["users"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UPDATE User",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"\",\n    \"email\": \"\",\n    \"password\": \"\",\n    \"language\": \"de\",\n    \"roleId\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/users/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE User by Id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/users/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "6"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Units",
+      "item": [
+        {
+          "name": "CREATE Unit",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/units",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["units"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Unit by Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/units/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["units", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "28"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Units",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/units",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["units"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UPDATE Unit",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Test\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/units/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["units", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "29"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Unit by Id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/units/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["units", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "NFC Tags",
+      "item": [
+        {
+          "name": "CREATE NFC Tag",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nfcId\": \"weiofhewoifho\",\n    \"studioId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/nfctags",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["nfctags"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET NFC-Tag by Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/nfctags/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["nfctags", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET NFC-Tags",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/nfctags",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["nfctags"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET NFC-Tags by Studio",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/nfctags/studios",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["nfctags", "studios"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UPDATE NFC-Tag",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nfcId\": \"evnerwivione\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/nfctags/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["nfctags", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE NFC-Tag by Id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/nfctags/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["nfctags", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Studios",
+      "item": [
+        {
+          "name": "CREATE Studio",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Studio 1\",\n    \"licenceId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/studios",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["studios"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Studio by Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/studios/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["studios", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Studios",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/studios",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["studios"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UPDATE Studio",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Studio 2\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/studios/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["studios", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Studio by Id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/studios/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["studios", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Training Entries",
+      "item": [
+        {
+          "name": "CREATE Training Entry",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"value\": \"Test\",\n    \"unitId\": 1,\n    \"machineId\": 1,\n    \"sessionId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/trainingEntries",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["trainingEntries"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Training Entry by Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/trainingEntries/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["trainingEntries", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Training Entry by User",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/trainingEntries/user",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["trainingEntries", "user"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Training Entries",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/trainingEntries",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["trainingEntries"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UPDATE Training Entry",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/trainingEntries/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["trainingEntries", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Training Entry by Id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/trainingEntries/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["trainingEntries", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sessions",
+      "item": [
+        {
+          "name": "CREATE Session",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"sessionStart\": \"2024-03-29 11:36:12\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/sessions",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["sessions"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Session by Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/sessions/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["sessions", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Session by User",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/sessions/user",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["sessions", "user"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Session",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/sessions",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["sessions"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UPDATE Session",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"sessionStart\": \"2024-03-29 11:56:12\",\n    \"sessionEnd\": \"2024-03-29 11:56:12\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/sessions/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["sessions", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Session by Id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/sessions/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["sessions", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Machine Categories",
+      "item": [
+        {
+          "name": "CREATE Machine Category",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Bench Press\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/machinecategories",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["machinecategories"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Machine Category by Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/machinecategories/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["machinecategories", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Machine Categories",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/machinecategories",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["machinecategories"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UPDATE Machine Category",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Bench Press\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/machinecategories/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["machinecategories", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Machine Category by Id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/machinecategories/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["machinecategories", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Machines",
+      "item": [
+        {
+          "name": "CREATE Machine",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Bench Press #1\",\n    \"machineCategoryId\": 1,\n    \"nfcTagId\": 1,\n    \"studioId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/machines",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["machines"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Machine by Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/machines/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["machines", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Machines",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/machines",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["machines"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UPDATE Machines",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Bench Press #1\",\n    \"machineCategoryId\": 1,\n    \"nfcTagId\": 1,\n    \"studioId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/machines/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["machines", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE Machine by Id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Kg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{protocol}}{{baseUrl}}{{version}}/machines/:id",
+              "host": ["{{protocol}}{{baseUrl}}{{version}}"],
+              "path": ["machines", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{ACCESS_TOKEN}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "protocol",
+      "value": "http://",
+      "type": "string"
+    },
+    {
+      "key": "version",
+      "value": "/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "ACCESS_TOKEN",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "REFRESH_TOKEN",
+      "value": "",
+      "type": "string"
+    }
+  ]
 }

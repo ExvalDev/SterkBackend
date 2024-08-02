@@ -6,7 +6,7 @@ const PROTOCOL = url.protocol;
 const HOST = url.host;
 
 const monitor = expressStatusMonitor({
-  title: "TrainTrack Status", // The title of the status page
+  title: "Sterk Status", // The title of the status page
   path: "/status",
   spans: [
     {
