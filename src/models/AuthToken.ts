@@ -13,7 +13,7 @@ import User from "./User";
  * @swagger
  * components:
  *   schemas:
- *     Token:
+ *     AuthToken:
  *       type: object
  *       required:
  *         - access_token
@@ -44,9 +44,9 @@ import User from "./User";
  *           format: date
  *           description: Last update of the user
  */
-class Token extends Model<
-  InferAttributes<Token>,
-  InferCreationAttributes<Token>
+class AuthToken extends Model<
+  InferAttributes<AuthToken>,
+  InferCreationAttributes<AuthToken>
 > {
   declare id: CreationOptional<number>;
   declare access_token: string;
@@ -57,7 +57,7 @@ class Token extends Model<
   declare updatedAt: CreationOptional<Date>;
 }
 
-Token.init(
+AuthToken.init(
   {
     id: {
       type: DataTypes.INTEGER.UNSIGNED,
@@ -77,11 +77,11 @@ Token.init(
     updatedAt: DataTypes.DATE,
   },
   {
-    modelName: "Token",
-    tableName: "tokens",
+    modelName: "AuthToken",
+    tableName: "authTokens",
     timestamps: true,
     sequelize,
   }
 );
 
-export default Token;
+export default AuthToken;

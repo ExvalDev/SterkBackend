@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import Role from "@/models/Role";
 import User from "@/models/User";
 import logger from "@/config/winston";
+import { HttpStatusCode } from "@/types/enums/HttpStatusCode";
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
@@ -56,3 +57,11 @@ export const generatePasswordResetToken = async (user: User) => {
   logger.info(`Password reset token generated for user: ${user.email}`);
   return password_reset_token;
 };
+
+export function parseFilterString(filterString: string): Record<string, any> {
+  try {
+    return filterString ? JSON.parse(filterString) : {};
+  } catch (error) {
+    throw new Error("Invalid JSON format in filter parameter.");
+  }
+}

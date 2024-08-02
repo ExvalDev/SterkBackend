@@ -15,10 +15,10 @@ import {
   generatePasswordResetToken,
   generateRefreshToken,
 } from "@/utils/helpers";
-import { HttpStatusCode } from "@/types/HttpStatusCode";
-import Token from "@/models/Token";
+import { HttpStatusCode } from "@/types/enums/HttpStatusCode";
+import AuthToken from "@/models/AuthToken";
 import logger from "@/config/winston";
-import TokenResponse from "@/types/Token";
+import TokenResponse from "@/types/classes/TokenResponse";
 import MailService from "@/services/mailService";
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
@@ -88,7 +88,7 @@ class AuthController {
           const access_token = await generateAccessToken(user, sessionId);
           const refresh_token = await generateRefreshToken(user, sessionId);
 
-          Token.create({
+          AuthToken.create({
             sessionId: sessionId,
             access_token: await bcrypt.hash(access_token, 12),
             refresh_token: await bcrypt.hash(refresh_token, 12),
@@ -175,7 +175,7 @@ class AuthController {
       const access_token = await generateAccessToken(user, sessionId);
       const refresh_token = await generateRefreshToken(user, sessionId);
 
-      Token.create({
+      AuthToken.create({
         sessionId: sessionId,
         access_token: await bcrypt.hash(access_token, 12),
         refresh_token: await bcrypt.hash(refresh_token, 12),
@@ -257,7 +257,7 @@ class AuthController {
         }
 
         const sessionId = decoded.session;
-        const token = await Token.findOne({
+        const token = await AuthToken.findOne({
           where: {
             sessionId: sessionId,
             userId: decoded.id,
@@ -329,7 +329,7 @@ class AuthController {
         }
 
         try {
-          const token = await Token.findOne({
+          const token = await AuthToken.findOne({
             where: {
               userId: decoded.id,
               sessionId: decoded.session,
@@ -477,13 +477,11 @@ class AuthController {
           .then(async (user) => {
             logger.info(`User password reset: ${user.email}`);
             user.update({ passwordResetToken: null });
-            return res
-              .status(HttpStatusCode.OK)
-              .json({
-                message: req.t("passwordResetSuccessfully", {
-                  lng: user.language,
-                }),
-              });
+            return res.status(HttpStatusCode.OK).json({
+              message: req.t("passwordResetSuccessfully", {
+                lng: user.language,
+              }),
+            });
           })
           .catch((error) => {
             next(error);

@@ -4,7 +4,7 @@ import { HTTP404Error, HTTP400Error, HTTP409Error } from "@/utils/error"; // Adj
 import bcrypt from "bcrypt";
 import logger from "@/config/winston";
 import Studio from "@/models/Studio";
-import { HttpStatusCode } from "@/types/HttpStatusCode";
+import { HttpStatusCode } from "@/types/enums/HttpStatusCode";
 
 class UserController {
   /**

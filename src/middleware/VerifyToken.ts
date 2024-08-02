@@ -3,7 +3,9 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { HTTP401Error } from "@/utils/error";
-import Token from "@/models/Token";
+import AuthToken from "@/models/AuthToken";
+import { Role } from "@/types/enums/Role";
+import Studio from "@/models/Studio";
 
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 
@@ -27,7 +29,7 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
 
         try {
           // Find all tokens for the user decoded from the JWT
-          const token = await Token.findOne({
+          const token = await AuthToken.findOne({
             where: {
               userId: decoded.id,
               sessionId: decoded.session,
@@ -50,7 +52,12 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
           }
 
           // Assuming token is valid, fetch the user's details
-          const user = await User.findByPk(decoded.id);
+          const user =
+            decoded.role === Role.STUDIO_OWNER
+              ? await User.findByPk(decoded.id, {
+                  include: [{ model: Studio }],
+                })
+              : await User.findByPk(decoded.id);
           if (!user) {
             throw new HTTP401Error("Unauthorized: User not found");
           }
@@ -61,6 +68,7 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
             name: user.name,
             language: user.language,
             role: decoded.role,
+            studioId: user.Studios[0].id,
           };
         } catch (error) {
           next(error);

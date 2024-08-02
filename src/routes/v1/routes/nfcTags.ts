@@ -1,7 +1,7 @@
 import express from "express";
 import NFCTagController from "@/controllers/v1/NFCTagController";
 import CheckRole from "@/middleware/CheckRole";
-import { Role } from "@/types/Role";
+import { Role } from "@/types/enums/Role";
 
 const router = express.Router();
 
@@ -9,13 +9,8 @@ const path = "/nfctags";
 
 router.get(
   path + "",
-  CheckRole([Role.ADMIN, Role.STUDIO_OWNER, Role.USER]),
-  NFCTagController.getAllNFCTags
-);
-router.get(
-  path + "/studios",
-  CheckRole([Role.STUDIO_OWNER]),
-  NFCTagController.getAllNFCTagsByStudio
+  CheckRole([Role.ADMIN, Role.STUDIO_OWNER]),
+  NFCTagController.getNFCTags
 );
 router.get(
   path + "/:id",

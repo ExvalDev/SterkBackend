@@ -1,7 +1,7 @@
 import express from "express";
 import StudioController from "@/controllers/v1/StudioController";
 import CheckRole from "@/middleware/CheckRole";
-import { Role } from "@/types/Role";
+import { Role } from "@/types/enums/Role";
 
 const router = express.Router();
 

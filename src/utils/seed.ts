@@ -3,8 +3,8 @@ import Licence from "@/models/Licence";
 import MachineCategory from "@/models/MachineCategory";
 import Role from "@/models/Role";
 import Unit from "@/models/Unit";
-import { Licence as Licences } from "@/types/Licence";
-import { Role as Roles } from "@/types/Role";
+import { Licence as Licences } from "@/types/enums/Licence";
+import { Role as Roles } from "@/types/enums/Role";
 
 const seedRoles = async () => {
   // Define your roles

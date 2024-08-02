@@ -2,7 +2,7 @@ import express from "express";
 import StudioController from "@/controllers/v1/StudioController";
 import SessionController from "@/controllers/v1/SessionController";
 import CheckRole from "@/middleware/CheckRole";
-import { Role } from "@/types/Role";
+import { Role } from "@/types/enums/Role";
 
 const router = express.Router();
 
@@ -12,11 +12,6 @@ router.get(
   path + "",
   CheckRole([Role.ADMIN, Role.STUDIO_OWNER]),
   SessionController.getAllSessions
-);
-router.get(
-  path + "/user",
-  CheckRole([Role.ADMIN, Role.STUDIO_OWNER, Role.USER]),
-  SessionController.getSessionsByUser
 );
 router.get(
   path + "/:id",

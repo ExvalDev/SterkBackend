@@ -1,6 +1,6 @@
 import TrainingDataController from "@/controllers/v1/TrainingEntryController";
 import CheckRole from "@/middleware/CheckRole";
-import { Role } from "@/types/Role";
+import { Role } from "@/types/enums/Role";
 import express from "express";
 
 const router = express.Router();

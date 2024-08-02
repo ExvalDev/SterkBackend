@@ -3,6 +3,9 @@ import Machine from "@/models/Machine"; // Adjust the path as necessary
 import { HTTP400Error, HTTP404Error } from "@/utils/error"; // Adjust the path as necessary
 import logger from "@/config/winston";
 import NFCTag from "@/models/NFCTag";
+import { HttpStatusCode } from "@/types/enums/HttpStatusCode";
+import DataResponse from "@/types/classes/DataResponse";
+import PaginationResponse from "@/types/classes/PaginationResponse";
 
 class MachineController {
   /**
@@ -19,26 +22,34 @@ class MachineController {
    *       content:
    *         application/json:
    *           schema:
-   *            type: object
-   *            required:
-   *              - name
-   *              - machineCategoryId
-   *              - nfcTagId
-   *              - studioId
-   *            properties:
-   *              name:
-   *                type: string
-   *              machineCategoryId:
-   *                type: integer
-   *              nfcTagId:
-   *                type: integer
-   *              studioId:
-   *                type: integer
+   *             type: object
+   *             required:
+   *               - name
+   *               - machineCategoryId
+   *               - nfcTagId
+   *               - studioId
+   *             properties:
+   *               name:
+   *                 type: string
+   *                 description: Name of the machine.
+   *               machineCategoryId:
+   *                 type: integer
+   *                 description: Identifier for the machine category.
+   *               nfcTagId:
+   *                 type: integer
+   *                 description: NFC tag associated with the machine.
+   *               studioId:
+   *                 type: integer
+   *                 description: Identifier for the studio where the machine is located.
    *     responses:
    *       201:
    *         description: Machine created successfully.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Machine'
    *       400:
-   *         description: Bad request.
+   *         description: Bad request. Possible reasons include missing required fields, invalid field formats, or validation errors.
    */
   static async createMachine(req: Request, res: Response, next: NextFunction) {
     try {
@@ -51,7 +62,16 @@ class MachineController {
       })
         .then((machine) => {
           logger.info(`Machine created: ${machine.name}`);
-          return res.status(201).json(machine);
+          return res
+            .status(HttpStatusCode.CREATED)
+            .json(
+              new DataResponse(
+                req,
+                HttpStatusCode.CREATED,
+                "machineCreated",
+                machine
+              )
+            );
         })
         .catch((error) => {
           throw new HTTP400Error("Bad Request", error);
@@ -67,19 +87,43 @@ class MachineController {
    *   get:
    *     summary: Get all machines
    *     tags: [Machine]
+   *     parameters:
+   *       - in: query
+   *         name: page
+   *         schema:
+   *           type: integer
+   *           default: 1
+   *         description: Page number of the machines list
+   *       - in: query
+   *         name: limit
+   *         schema:
+   *           type: integer
+   *           default: 10
+   *         description: Number of machines per page
    *     responses:
    *       200:
-   *         description: A list of machines.
+   *         description: A paginated list of machines along with pagination details.
    *         content:
    *           application/json:
    *             schema:
-   *               type: array
-   *               items:
-   *                 $ref: '#/components/schemas/Machine'
+   *               type: object
+   *               properties:
+   *                 data:
+   *                   type: array
+   *                   items:
+   *                     $ref: '#/components/schemas/Machine'
+   *                 pagination:
+   *                   $ref: '#/components/schemas/PaginationResponse'
    */
   static async getAllMachines(req: Request, res: Response, next: NextFunction) {
     try {
-      const machines = await Machine.findAll({
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const offset = (page - 1) * limit;
+      const { count, rows } = await Machine.findAndCountAll({
+        limit,
+        offset,
+        order: [["createdAt", "DESC"]],
         include: [
           {
             model: NFCTag,
@@ -87,8 +131,19 @@ class MachineController {
           },
         ],
       });
-      logger.info(`Retrieved ${machines.length} machines`);
-      return res.json(machines);
+      const totalPages = Math.ceil(count / limit);
+      logger.info(`Retrieved ${count} machines`);
+      return res
+        .status(HttpStatusCode.OK)
+        .json(
+          new DataResponse(
+            req,
+            HttpStatusCode.OK,
+            "machinesRetrieved",
+            rows,
+            new PaginationResponse(page, totalPages, count)
+          )
+        );
     } catch (error) {
       next(error);
     }
@@ -101,21 +156,25 @@ class MachineController {
    *     summary: Get a machine by ID
    *     tags: [Machine]
    *     parameters:
-   *      - in: path
-   *        name: id
-   *        required: true
-   *        schema:
-   *          type: integer
-   *        description: ID of the machine to get
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: ID of the machine to retrieve details for.
    *     responses:
    *       200:
-   *         description: Machine details.
+   *         description: Detailed information about the machine, including associated NFC tag data.
    *         content:
    *           application/json:
    *             schema:
    *               $ref: '#/components/schemas/Machine'
    *       404:
    *         description: Machine not found.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Error'
    */
   static async getMachineById(req: Request, res: Response, next: NextFunction) {
     try {
@@ -132,7 +191,11 @@ class MachineController {
         throw new HTTP404Error("machineNotFound");
       }
       logger.info(`Retrieved machine: ${machine.name}`);
-      return res.json(machine);
+      return res
+        .status(HttpStatusCode.OK)
+        .json(
+          new DataResponse(req, HttpStatusCode.OK, "machineRetrieved", machine)
+        );
     } catch (error) {
       next(error);
     }
@@ -145,35 +208,41 @@ class MachineController {
    *     summary: Update a machine
    *     tags: [Machine]
    *     parameters:
-   *      - in: path
-   *        name: id
-   *        required: true
-   *        schema:
-   *          type: integer
-   *        description: ID of the machine to update
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: ID of the machine to update
    *     requestBody:
    *       required: true
    *       content:
    *         application/json:
    *           schema:
-   *            type: object
-   *            required:
-   *              - name
-   *              - machineCategoryId
-   *              - nfcTagId
-   *              - studioId
-   *            properties:
-   *              name:
-   *                type: string
-   *              machineCategoryId:
-   *                type: integer
-   *              nfcTagId:
-   *                type: integer
-   *              studioId:
-   *                type: integer
+   *             type: object
+   *             required:
+   *               - name
+   *               - machineCategoryId
+   *               - nfcTagId
+   *               - studioId
+   *             properties:
+   *               name:
+   *                 type: string
+   *                 description: New name of the machine.
+   *               machineCategoryId:
+   *                 type: integer
+   *                 description: Updated category ID of the machine.
+   *               nfcTagId:
+   *                 type: integer
+   *                 description: Updated NFC tag ID associated with the machine.
+   *               studioId:
+   *                 type: integer
+   *                 description: Updated studio ID where the machine is located.
    *     responses:
    *       200:
    *         description: Machine updated successfully.
+   *       400:
+   *         description: Bad request, such as missing or invalid fields in the request.
    *       404:
    *         description: Machine not found.
    */
@@ -196,7 +265,16 @@ class MachineController {
         })
         .then((machine) => {
           logger.info(`Machine updated: ${machine.name}`);
-          return res.json(machine);
+          return res
+            .status(HttpStatusCode.OK)
+            .json(
+              new DataResponse(
+                req,
+                HttpStatusCode.OK,
+                "machineUpdated",
+                machine
+              )
+            );
         })
         .catch((error) => {
           throw new HTTP400Error("Bad Request", error);
@@ -224,6 +302,8 @@ class MachineController {
    *         description: Machine deleted successfully.
    *       404:
    *         description: Machine not found.
+   *       500:
+   *         description: Server error.
    */
   static async deleteMachine(req: Request, res: Response, next: NextFunction) {
     try {
@@ -234,7 +314,7 @@ class MachineController {
       }
       await machine.destroy();
       logger.info(`Deleted machine: ${machine.name}`);
-      return res.status(204).send(); // No content to send back
+      return res.status(HttpStatusCode.NO_CONTENT).send();
     } catch (error) {
       next(error);
     }
