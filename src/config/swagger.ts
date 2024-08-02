@@ -8,7 +8,7 @@ const options = {
     openapi: "3.0.0",
     info: {
       title: "Sterk API",
-      version: "1.0.0",
+      version: "1.0.7",
       description:
         "This is a simple CRUD API application made with Express and documented with Swagger",
       license: {
