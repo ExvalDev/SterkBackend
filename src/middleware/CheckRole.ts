@@ -1,4 +1,4 @@
-import { Role } from "@/types/Role";
+import { Role } from "@/types/enums/Role";
 import { HTTP403Error } from "@/utils/error";
 
 const CheckRole = (roles: Role[]) => (req, res, next) => {

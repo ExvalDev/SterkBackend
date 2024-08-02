@@ -1,7 +1,7 @@
 import express from "express";
 import MachineCategoryController from "@/controllers/v1/MachineCategoryController";
 import CheckRole from "@/middleware/CheckRole";
-import { Role } from "@/types/Role";
+import { Role } from "@/types/enums/Role";
 
 const router = express.Router();
 

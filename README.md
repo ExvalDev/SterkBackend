@@ -1,6 +1,6 @@
-# TrainTrack Backend
+# Sterk Backend
 
-Welcome to the TrainTrack Backend repository! This Node.js Express application provides a set of RESTful endpoints for the TrainTrack app, allowing for efficient data management and retrieval.
+Welcome to the Sterk Backend repository! This Node.js Express application provides a set of RESTful endpoints for the Sterk App, allowing for efficient data management and retrieval.
 
 ## Features
 
@@ -24,11 +24,11 @@ Follow these steps to get your development environment set up:
 ### 1. Clone the Repository
 
 ```
-git clone https://github.com/ExvalDev/TrainTrackBackend.git
-cd TrainTrackBackend
+git clone https://github.com/ExvalDev/SterkBackend.git
+cd SterkBackend
 ```
 
-### 2. Install Dependencies
+### sterk2. Install Dependencies
 
 ```
 npm install

@@ -7,7 +7,7 @@ import {
   ForeignKey,
 } from "sequelize";
 import { sequelize } from "../config/sequelize";
-import type { Language } from "../types/Language";
+import type { Language } from "../types/enums/Language";
 import Role from "./Role";
 import Studio from "./Studio";
 

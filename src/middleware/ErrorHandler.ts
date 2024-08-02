@@ -1,7 +1,8 @@
-import e, { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
-import Error from "../types/Error";
+import Error from "../types/interfaces/Error";
 import logger from "@/config/winston";
+import { ValidationErrorItem } from "sequelize";
 
 const ErrorHandler = (
   error: Error,
@@ -9,11 +10,18 @@ const ErrorHandler = (
   res: Response,
   next: NextFunction
 ) => {
+  const hasUnhandledValidationErrors =
+    error["errors"] && error["errors"].length > 0;
+  let validationErrors = "";
+  if (hasUnhandledValidationErrors) {
+    validationErrors = error["errors"]
+      .map((validationError: ValidationErrorItem) => validationError.message)
+      .join(", ");
+  }
+
   logger.error(
-    error.validationErrors
-      ? `${req.t(error.message, { lng: "en" })} [${error.validationErrors.join(
-          ", "
-        )}]`
+    hasUnhandledValidationErrors
+      ? validationErrors
       : req.t(error.message, { lng: "en" })
   );
 
@@ -23,8 +31,8 @@ const ErrorHandler = (
     message: req.t(error.message),
   };
 
-  if (error.validationErrors) {
-    response["errors"] = error.validationErrors;
+  if (hasUnhandledValidationErrors) {
+    response["errors"] = validationErrors;
   }
 
   return res.status(error.httpCode || 500).json(response);

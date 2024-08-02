@@ -1,6 +1,6 @@
 {
-  "name": "traintrackbackend",
-  "version": "1.0.6",
+  "name": "sterkbackend",
+  "version": "1.0.7",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,8 @@
     "copy-static": "ncp src/static dist/static",
     "start": "node ./dist/app.js",
     "dev": "nodemon",
-    "test": "test"
+    "test": "test",
+    "version": "./scripts/version.sh"
   },
   "author": "EXVAL",
   "license": "ISC",

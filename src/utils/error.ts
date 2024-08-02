@@ -1,5 +1,5 @@
 import { ForeignKeyConstraintError, ValidationError } from "sequelize";
-import { HttpStatusCode } from "../types/HttpStatusCode";
+import { HttpStatusCode } from "../types/enums/HttpStatusCode";
 
 class BaseError extends Error {
   public readonly name: string;

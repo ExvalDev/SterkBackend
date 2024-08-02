@@ -1,4 +1,4 @@
-import { HttpStatusCode } from "@/types/HttpStatusCode";
+import { HttpStatusCode } from "@/types/enums/HttpStatusCode";
 import express, { NextFunction, Request, Response } from "express";
 import path from "path";
 

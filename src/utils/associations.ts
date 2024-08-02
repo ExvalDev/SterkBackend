@@ -7,7 +7,7 @@ import NFCTag from "@/models/NFCTag";
 import Machine from "@/models/Machine";
 import User from "@/models/User";
 import Role from "@/models/Role";
-import Token from "@/models/Token";
+import AuthToken from "@/models/AuthToken";
 import logger from "@/config/winston";
 import Studio from "@/models/Studio";
 import Licence from "@/models/Licence";
@@ -51,7 +51,7 @@ export const createAssociations = () => {
     ...options,
     foreignKey: "userId",
   });
-  User.hasMany(Token, {
+  User.hasMany(AuthToken, {
     ...options,
     foreignKey: "userId",
   });
@@ -77,7 +77,7 @@ export const createAssociations = () => {
   Machine.belongsTo(Studio, { foreignKey: "studioId" });
   User.belongsTo(Role, { foreignKey: "roleId" });
   Session.belongsTo(User, { foreignKey: "userId" });
-  Token.belongsTo(User, { foreignKey: "userId" });
+  AuthToken.belongsTo(User, { foreignKey: "userId" });
   NFCTag.belongsTo(Studio, { foreignKey: "studioId" });
   User.belongsToMany(Studio, {
     foreignKey: "userId",

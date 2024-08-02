@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   app:
-    container_name: trainTrackBackend
+    container_name: sterkBackend
     env_file:
       - .env
     environment:
@@ -17,7 +17,7 @@ services:
       - logs_volume:/usr/src/app/logs
 
   db:
-    container_name: trainTrackDB
+    container_name: sterkDB
     image: mysql:8.0
     env_file:
       - .env

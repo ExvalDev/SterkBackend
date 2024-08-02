@@ -3,7 +3,7 @@ import TrainingEntry from "@/models/TrainingEntry"; // Adjust the path as necess
 import { HTTP400Error, HTTP403Error, HTTP404Error } from "@/utils/error"; // Adjust the path as necessary
 import logger from "@/config/winston";
 import Unit from "@/models/Unit";
-import { Role } from "@/types/Role";
+import { Role } from "@/types/enums/Role";
 
 class TrainingEntryController {
   /**

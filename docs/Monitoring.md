@@ -14,15 +14,15 @@ Logs provide insights into application behavior and are crucial for diagnosing p
 
 #### 1.1.1 Local Logs
 
-**Location:** Logs are stored in `/var/lib/docker/volumes/traintrackbackend_logs_volume/_data`.
+**Location:** Logs are stored in `/var/lib/docker/volumes/sterkbackend_logs_volume/_data`.
 **Access:** Use SSH to access server logs directly. For example:
 
 ```bash
-  tail -f /var/lib/docker/volumes/traintrackbackend_logs_volume/_data/file.log
+  tail -f /var/lib/docker/volumes/sterkbackend_logs_volume/_data/file.log
 ```
 
 #### 1.1.2 Docker Logs
 
 ```
-docker logs -f trainTrackBackend
+docker logs -f sterkBackend
 ```
